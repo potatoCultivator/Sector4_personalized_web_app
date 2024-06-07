@@ -11,7 +11,7 @@ import SearchOutlined from '@ant-design/icons/SearchOutlined';
 
 export default function Search() {
   return (
-    <Box sx={{ width: '100%', ml: { xs: 0, md: 1 } }}>
+    <Box sx={{ width: '100%', ml: { xs: 0, md: 1 }, display: 'flex', justifyContent: 'flex-end', pr: 2 }}>
       <FormControl sx={{ width: { xs: '100%', md: 250 } }}>
         <OutlinedInput
           size="medium"
