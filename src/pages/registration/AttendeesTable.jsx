@@ -10,6 +10,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
+import { EditOutlined } from '@ant-design/icons';
+import Tooltip from '@mui/material/Tooltip';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { useTheme } from '@emotion/react';
 
 // third-party
 import { NumericFormat } from 'react-number-format';
@@ -17,34 +24,25 @@ import { NumericFormat } from 'react-number-format';
 // project import
 import Dot from 'components/@extended/Dot';
 
-function createData(tracking_no, name, fat, carbs, protein) {
-  return { tracking_no, name, fat, carbs, protein };
+// function createData(tracking_no, name, fat, carbs, protein) {
+//   return { tracking_no, name, fat, carbs, protein };
+// }
+
+function createData(tracking_no,church ,name, acadStat, stat, regStat) {
+  return { tracking_no,church ,name, acadStat, stat, regStat };
 }
 
-// const rows = [
-//   createData(84564564, 'Camera Lens', 40, 2, 40570),
-//   createData(98764564, 'Laptop', 300, 0, 180139),
-//   createData(98756325, 'Mobile', 355, 1, 90989),
-//   createData(98652366, 'Handset', 50, 1, 10239),
-//   createData(13286564, 'Computer Accessories', 100, 1, 83348),
-//   createData(86739658, 'TV', 99, 0, 410780),
-//   createData(13256498, 'Keyboard', 125, 2, 70999),
-//   createData(98753263, 'Mouse', 89, 2, 10570),
-//   createData(98753275, 'Desktop', 185, 1, 98063),
-//   createData(98753291, 'Chair', 100, 0, 14001)
-// ];
-
 const rows = [
-  createData('Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 2, 2),
-  createData('Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
-  createData('Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
-  createData('Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
-  createData('Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
-  createData('Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
-  createData('Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 2, 2),
-  createData('Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 2, 1),
-  createData('Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
-  createData('Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
+  createData(1, 'Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 2, 2),
+  createData(2, 'Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
+  createData(3, 'Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
+  createData(4, 'Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
+  createData(5, 'Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
+  createData(6, 'Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
+  createData(7, 'Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 2, 2),
+  createData(8, 'Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 2, 1),
+  createData(9, 'Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
+  createData(10, 'Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -78,6 +76,12 @@ const headCells = [
     id: 'tracking_no',
     align: 'left',
     disablePadding: false,
+    label: 'Number'
+  },
+  {
+    id: 'church',
+    align: 'left',
+    disablePadding: true,
     label: 'Church'
   },
   {
@@ -87,22 +91,29 @@ const headCells = [
     label: 'Name'
   },
   {
-    id: 'fat',
+    id: 'acadStat',
     align: 'right',
     disablePadding: false,
     label: 'Academic Status'
   },
   {
-    id: 'carbs',
+    id: 'stat',
     align: 'left',
     disablePadding: false,
     label: 'Status'
   },
   {
-    id: 'protein',
+    id: 'regStat',
     align: 'right',
     disablePadding: false,
     label: 'Registration'
+  }
+  ,
+  {
+    id: 'action',
+    align: 'center',
+    disablePadding: false,
+    label: 'Action'
   }
 ];
 
@@ -149,6 +160,7 @@ function AttendeesStatus({ status }) {
     <Stack direction="row" spacing={1} alignItems="center">
       <Dot color={color} />
       <Typography>{title}</Typography>
+      {/* <Chip label={title} color={color} variant="outlined" size="small"/> */}
     </Stack>
   );
 }
@@ -186,6 +198,7 @@ function RegistrationPayment({paymentStats})
 export default function AttendeesTable() {
   const order = 'asc';
   const orderBy = 'tracking_no';
+  const theme = useTheme();
 
   return (
     <Box>
@@ -213,16 +226,30 @@ export default function AttendeesTable() {
                   tabIndex={-1}
                   key={row.tracking_no}
                 >
-                  <TableCell component="th" id={labelId} scope="row">
+                  <TableCell align="center" component="th" id={labelId} scope="row">
                     <Link color="secondary"> {row.tracking_no}</Link>
                   </TableCell>
+                  <TableCell>{row.church}</TableCell>
                   <TableCell>{row.name}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
+                  <TableCell align="right">{row.acadStat}</TableCell>
                   <TableCell>
-                    <AttendeesStatus status={row.carbs} />
+                    <AttendeesStatus status={row.stat} />
                   </TableCell>
                   <TableCell align="right">
-                    <RegistrationPayment paymentStats={row.protein} />
+                    <RegistrationPayment paymentStats={row.regStat} />
+                    {/* <NumericFormat value={row.protein} displayType="text" thousandSeparator prefix="$" /> */}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Tooltip title="Edit" placement="top">
+                      <IconButton color="black" onClick={() => { console.log("Edit button clicked"); }}>
+                        <EditOutlined />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete" placement="top">
+                      <IconButton style={{ color: theme.palette.error.main }} onClick={() => { console.log("Delete button clicked"); }}>
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );

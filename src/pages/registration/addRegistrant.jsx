@@ -12,18 +12,7 @@ export default function AddProductForm() {
   const [church, setChurch] = useState('None');
   const [academicStat, setAcademicStat] = useState('None');
   const [status, setStatus] = useState(0);
-
-
-  const [brand, setBrand] = useState('');
-  const [model, setModel] = useState('');
-  const [size, setSize] = useState('');
-  const [color, setColor] = useState('');
-  const [material, setMaterial] = useState('');
-  const [weight, setWeight] = useState('');
-  const [unit, setUnit] = useState('kg');
-  const [quantity, setQuantity] = useState('');
-  const [costPrice, setCostPrice] = useState('');
-  const [sellingPrice, setSellingPrice] = useState('');
+  
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState('');

@@ -1,16 +1,26 @@
 // material-ui
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 // project import
 import MainCard from 'components/MainCard';
 import RegistrationCrud from './registrationCrud'
 import AttendeesTable from './AttendeesTable';
 import AddRegistrant from './addRegistrant'
+import Search from './Search';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 export default function Registration() {
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
       {/* row 1 */}
@@ -34,6 +44,26 @@ export default function Registration() {
           <Grid item />
         </Grid>
         <MainCard sx={{ mt: 2 }} content={false}>
+          <Grid container spacing={1} mt={1} justifyContent="center" alignItems="center" sx={{ borderBottom: 2, borderColor: 'divider' }}>
+            <Grid item xs={12} sm={8} md={6}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                sx={{
+                  '& .MuiTabs-indicator': {
+                    height: '3px',
+                  },
+                }}
+              >
+                <Tab label="All" />
+                <Tab label="Paid" />
+                <Tab label="Unpaid" />
+              </Tabs>
+            </Grid>
+            <Grid item xs={12} sm={8} md={6}>
+              <Search />
+            </Grid>
+          </Grid>
           <AttendeesTable />
         </MainCard>
       </Grid>
