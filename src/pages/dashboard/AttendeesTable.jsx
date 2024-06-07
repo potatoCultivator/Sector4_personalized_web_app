@@ -21,17 +21,30 @@ function createData(tracking_no, name, fat, carbs, protein) {
   return { tracking_no, name, fat, carbs, protein };
 }
 
+// const rows = [
+//   createData(84564564, 'Camera Lens', 40, 2, 40570),
+//   createData(98764564, 'Laptop', 300, 0, 180139),
+//   createData(98756325, 'Mobile', 355, 1, 90989),
+//   createData(98652366, 'Handset', 50, 1, 10239),
+//   createData(13286564, 'Computer Accessories', 100, 1, 83348),
+//   createData(86739658, 'TV', 99, 0, 410780),
+//   createData(13256498, 'Keyboard', 125, 2, 70999),
+//   createData(98753263, 'Mouse', 89, 2, 10570),
+//   createData(98753275, 'Desktop', 185, 1, 98063),
+//   createData(98753291, 'Chair', 100, 0, 14001)
+// ];
+
 const rows = [
-  createData(84564564, 'Camera Lens', 40, 2, 40570),
-  createData(98764564, 'Laptop', 300, 0, 180139),
-  createData(98756325, 'Mobile', 355, 1, 90989),
-  createData(98652366, 'Handset', 50, 1, 10239),
-  createData(13286564, 'Computer Accessories', 100, 1, 83348),
-  createData(86739658, 'TV', 99, 0, 410780),
-  createData(13256498, 'Keyboard', 125, 2, 70999),
-  createData(98753263, 'Mouse', 89, 2, 10570),
-  createData(98753275, 'Desktop', 185, 1, 98063),
-  createData(98753291, 'Chair', 100, 0, 14001)
+  createData('Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 2, 2),
+  createData('Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
+  createData('Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
+  createData('Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
+  createData('Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
+  createData('Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
+  createData('Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 2, 2),
+  createData('Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 2, 1),
+  createData('Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
+  createData('Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -65,38 +78,37 @@ const headCells = [
     id: 'tracking_no',
     align: 'left',
     disablePadding: false,
-    label: 'Tracking No.'
+    label: 'Church'
   },
   {
     id: 'name',
     align: 'left',
     disablePadding: true,
-    label: 'Product Name'
+    label: 'Name'
   },
   {
     id: 'fat',
     align: 'right',
     disablePadding: false,
-    label: 'Total Order'
+    label: 'Academic Status'
   },
   {
     id: 'carbs',
     align: 'left',
     disablePadding: false,
-
     label: 'Status'
   },
   {
     id: 'protein',
     align: 'right',
     disablePadding: false,
-    label: 'Total Amount'
+    label: 'Registration'
   }
 ];
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function OrderTableHead({ order, orderBy }) {
+function AttendeesTableHead({ order, orderBy }) {
   return (
     <TableHead>
       <TableRow>
@@ -115,22 +127,18 @@ function OrderTableHead({ order, orderBy }) {
   );
 }
 
-function OrderStatus({ status }) {
+function AttendeesStatus({ status }) {
   let color;
   let title;
 
   switch (status) {
     case 0:
-      color = 'warning';
-      title = 'Pending';
+      color = 'success';
+      title = 'Paid';
       break;
     case 1:
-      color = 'success';
-      title = 'Approved';
-      break;
-    case 2:
       color = 'error';
-      title = 'Rejected';
+      title = 'unpaid';
       break;
     default:
       color = 'primary';
@@ -145,9 +153,37 @@ function OrderStatus({ status }) {
   );
 }
 
+function RegistrationPayment({paymentStats})
+{
+  let payment;
+
+  switch(paymentStats)
+  {
+    case 0:
+      payment = 30
+      break;
+    case 1:
+      payment = 50
+      break;
+    case 2:
+      payment = 80
+      break;
+    case 3:
+      payment = 100
+      break;
+    default:
+      payment = 0
+  }
+  return(
+    <>
+      <NumericFormat value={payment} displayType="text" thousandSeparator prefix="₱" />
+    </>
+  )
+}
+
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function OrderTable() {
+export default function AttendeesTable() {
   const order = 'asc';
   const orderBy = 'tracking_no';
 
@@ -164,7 +200,7 @@ export default function OrderTable() {
         }}
       >
         <Table aria-labelledby="tableTitle">
-          <OrderTableHead order={order} orderBy={orderBy} />
+          <AttendeesTableHead order={order} orderBy={orderBy} />
           <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
@@ -183,10 +219,11 @@ export default function OrderTable() {
                   <TableCell>{row.name}</TableCell>
                   <TableCell align="right">{row.fat}</TableCell>
                   <TableCell>
-                    <OrderStatus status={row.carbs} />
+                    <AttendeesStatus status={row.carbs} />
                   </TableCell>
                   <TableCell align="right">
-                    <NumericFormat value={row.protein} displayType="text" thousandSeparator prefix="$" />
+                    <RegistrationPayment paymentStats={row.protein} />
+                    {/* <NumericFormat value={row.protein} displayType="text" thousandSeparator prefix="$" /> */}
                   </TableCell>
                 </TableRow>
               );
@@ -198,6 +235,8 @@ export default function OrderTable() {
   );
 }
 
-OrderTableHead.propTypes = { order: PropTypes.any, orderBy: PropTypes.string };
+AttendeesTableHead.propTypes = { order: PropTypes.any, orderBy: PropTypes.string };
 
-OrderStatus.propTypes = { status: PropTypes.number };
+AttendeesStatus.propTypes = { status: PropTypes.any };
+
+RegistrationPayment.propTypes = { registration: PropTypes.any }

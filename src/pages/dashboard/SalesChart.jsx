@@ -45,7 +45,7 @@ const columnChartOptions = {
   },
   yaxis: {
     title: {
-      text: '$ (thousands)'
+      text: '₱ (thousands)'
     }
   },
   fill: {
@@ -54,7 +54,7 @@ const columnChartOptions = {
   tooltip: {
     y: {
       formatter(val) {
-        return `$ ${val} thousands`;
+        return `₱ ₱{val} thousands`;
       }
     }
   },
@@ -73,13 +73,14 @@ const columnChartOptions = {
   ]
 };
 
+// Input Data in graph
 const initialSeries = [
   {
     name: 'Income',
     data: [180, 90, 135, 114, 120, 145]
   },
   {
-    name: 'Cost Of Sales',
+    name: 'Total Expenses',
     data: [120, 45, 78, 150, 168, 99]
   }
 ];
@@ -125,7 +126,7 @@ export default function SalesChart() {
     } else if (cos) {
       setSeries([
         {
-          name: 'Cost Of Sales',
+          name: 'Total Expenses',
           data: [120, 45, 78, 150, 168, 99]
         }
       ]);
@@ -171,7 +172,7 @@ export default function SalesChart() {
             <Typography variant="h6" color="secondary">
               Net Profit
             </Typography>
-            <Typography variant="h4">$1560</Typography>
+            <Typography variant="h4">₱1560</Typography>
           </Stack>
           <FormControl component="fieldset">
             <FormGroup row>
@@ -179,7 +180,7 @@ export default function SalesChart() {
                 control={<Checkbox color="warning" checked={income} onChange={handleLegendChange} name="income" />}
                 label="Income"
               />
-              <FormControlLabel control={<Checkbox checked={cos} onChange={handleLegendChange} name="cos" />} label="Cost of Sales" />
+              <FormControlLabel control={<Checkbox checked={cos} onChange={handleLegendChange} name="cos" />} label="Total Expenses" />
             </FormGroup>
           </FormControl>
         </Stack>

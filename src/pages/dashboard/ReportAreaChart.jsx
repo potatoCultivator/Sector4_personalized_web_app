@@ -70,7 +70,7 @@ export default function ReportAreaChart() {
   useEffect(() => {
     setOptions((prevState) => ({
       ...prevState,
-      colors: [theme.palette.warning.main],
+      colors: [theme.palette.warning.main],// change color of the line graph
       xaxis: {
         labels: {
           style: {
@@ -93,6 +93,10 @@ export default function ReportAreaChart() {
     {
       name: 'Series 1',
       data: [58, 115, 28, 83, 63, 75, 35, 55]
+    },
+    {
+      name: 'Series 2',
+      data: [59, 116, 29, 84, 64, 76, 36, 100]
     }
   ]);
 

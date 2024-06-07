@@ -1,9 +1,12 @@
 // assets
 import { DashboardOutlined } from '@ant-design/icons';
+import { UsergroupAddOutlined } from '@ant-design/icons';
+
 
 // icons
 const icons = {
-  DashboardOutlined
+  DashboardOutlined,
+  UsergroupAddOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -17,8 +20,16 @@ const dashboard = {
       id: 'dashboard',
       title: 'Dashboard',
       type: 'item',
-      url: '/dashboard/default',
+      url: '/dashboard',
       icon: icons.DashboardOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'registration',
+      title: 'Registration',
+      type: 'item',
+      url: '/registration',
+      icon: icons.UsergroupAddOutlined,
       breadcrumbs: false
     }
   ]

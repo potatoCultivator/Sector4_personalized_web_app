@@ -11,10 +11,10 @@ import SalesChart from './SalesChart';
 
 // sales report status
 const status = [
-  {
-    value: 'today',
-    label: 'Today'
-  },
+  // {
+  //   value: 'today',
+  //   label: 'Today'
+  // },
   {
     value: 'month',
     label: 'This Month'
@@ -28,13 +28,13 @@ const status = [
 // ==============================|| DEFAULT - SALES REPORT ||============================== //
 
 export default function SaleReportCard() {
-  const [value, setValue] = useState('today');
+  const [value, setValue] = useState('month');
 
   return (
     <>
       <Grid container alignItems="center" justifyContent="space-between">
         <Grid item>
-          <Typography variant="h5">Sales Report</Typography>
+          <Typography variant="h5">Budget Report</Typography>
         </Grid>
         <Grid item>
           <TextField
