@@ -11,6 +11,8 @@ import RegistrationCrud from './registrationCrud'
 import AttendeesTable from './AttendeesTable';
 import AddRegistrant from './addRegistrant'
 import Search from './Search';
+import TableTab from './TableTab';
+import SortingTab from './SortingTab';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -35,7 +37,19 @@ export default function Registration() {
         
         </MainCard>
       </Grid>
-    
+
+      {/* row 2 */}
+      <Grid item xs={12}>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h5">Current Attendees</Typography>
+          </Grid>
+          <Grid item />
+        </Grid>
+        <SortingTab />
+      </Grid>
+
+      {/* row 3 */}
       <Grid item xs={12} md={7} lg={8}>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
@@ -43,29 +57,9 @@ export default function Registration() {
           </Grid>
           <Grid item />
         </Grid>
-        <MainCard sx={{ mt: 2 }} content={false}>
-          <Grid container spacing={1} mt={1} justifyContent="center" alignItems="center" sx={{ borderBottom: 2, borderColor: 'divider' }}>
-            <Grid item xs={12} sm={8} md={6}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                sx={{
-                  '& .MuiTabs-indicator': {
-                    height: '3px',
-                  },
-                }}
-              >
-                <Tab label="All" />
-                <Tab label="Paid" />
-                <Tab label="Unpaid" />
-              </Tabs>
-            </Grid>
-            <Grid item xs={12} sm={8} md={6}>
-              <Search />
-            </Grid>
-          </Grid>
-          <AttendeesTable />
-        </MainCard>
+        
+        <SortingTab />
+
       </Grid>
       <Grid item xs={12} md={5} lg={4}>
         <Grid container alignItems="center" justifyContent="space-between">
@@ -75,14 +69,6 @@ export default function Registration() {
           <Grid item />
         </Grid>
         <MainCard sx={{ mt: 2 }} content={false}>
-          {/* <Box sx={{ p: 3, pb: 0 }}>
-            <Stack spacing={2}>
-              <Typography variant="h6" color="text.secondary">
-                This Fellowship Statistics
-              </Typography>
-              <Typography variant="h3">$7,650</Typography>
-            </Stack>
-          </Box> */}
           <AddRegistrant />
         </MainCard>
       </Grid>

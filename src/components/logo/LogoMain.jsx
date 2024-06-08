@@ -1,6 +1,6 @@
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import logo from 'assets/images/s4ypf_logo.jpg';
+import logo from 'assets/images/s4ypf.jpg';
 
 // ==============================|| LOGO SVG ||============================== //
 

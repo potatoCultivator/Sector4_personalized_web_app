@@ -33,7 +33,7 @@ function createData(tracking_no,church ,name, acadStat, stat, regStat) {
 }
 
 const rows = [
-  createData(1, 'Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 2, 2),
+  createData(1, 'Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 0, 2),
   createData(2, 'Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
   createData(3, 'Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
   createData(4, 'Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
