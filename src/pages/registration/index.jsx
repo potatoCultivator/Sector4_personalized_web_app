@@ -30,19 +30,19 @@ export default function Registration() {
   const currencies = [
     {
       value: 'USD',
-      label: '$',
+      label: 'CBC',
     },
     {
       value: 'EUR',
-      label: '€',
+      label: 'CBC Albuera',
     },
     {
       value: 'BTC',
-      label: '฿',
+      label: 'CBM San Agustin',
     },
     {
       value: 'JPY',
-      label: '¥',
+      label: 'CBM Gacat',
     },
   ];
   
@@ -73,9 +73,8 @@ export default function Registration() {
             <TextField
             id="standard-select-currency"
             select
-            label="Select"
+            label="Select a Church"
             defaultValue="EUR"
-            helperText="Please select your currency"
             variant="standard"
           >
             {currencies.map((option) => (
