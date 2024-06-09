@@ -4,6 +4,9 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+
 
 // project import
 import MainCard from 'components/MainCard';
@@ -24,6 +27,26 @@ export default function Registration() {
     setValue(newValue);
   };
 
+  const currencies = [
+    {
+      value: 'USD',
+      label: '$',
+    },
+    {
+      value: 'EUR',
+      label: '€',
+    },
+    {
+      value: 'BTC',
+      label: '฿',
+    },
+    {
+      value: 'JPY',
+      label: '¥',
+    },
+  ];
+  
+
   return (
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
       {/* row 1 */}
@@ -42,11 +65,30 @@ export default function Registration() {
       {/* row 2 */}
       <Grid item xs={12}>
         <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item>
+          <Grid item xs={6}>
             <Typography variant="h5">Current Attendees</Typography>
-          </Grid>
+           
+            </Grid>
+            <Grid item xs={6}>
+            <TextField
+            id="standard-select-currency"
+            select
+            label="Select"
+            defaultValue="EUR"
+            helperText="Please select your currency"
+            variant="standard"
+          >
+            {currencies.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+           
+            </Grid>
           <Grid item />
         </Grid>
+        
         <SortingTab />
       </Grid>
 
