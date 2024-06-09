@@ -6,7 +6,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-
+import Box from '@mui/material/Box';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -70,20 +70,21 @@ export default function Registration() {
            
             </Grid>
             <Grid item xs={6}>
-            <TextField
-            id="standard-select-currency"
-            select
-            label="Select a Church"
-            defaultValue="EUR"
-            variant="standard"
-          >
-            {currencies.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-           
+              <Box display="flex" alignItems="flex-start">
+                <TextField
+                  id="standard-select-currency"
+                  select
+                  label="Select a Church"
+                  defaultValue="EUR"
+                  variant="standard"
+                >
+                  {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Box>
             </Grid>
           <Grid item />
         </Grid>
