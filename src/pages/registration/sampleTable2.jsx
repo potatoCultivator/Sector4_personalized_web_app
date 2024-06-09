@@ -33,16 +33,10 @@ function createData(tracking_no,church ,name, acadStat, stat, regStat) {
 }
 
 const rows = [
-  createData(1, 'Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 0, 2),
-  createData(2, 'Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
-  createData(3, 'Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
-  createData(4, 'Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
-  createData(5, 'Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
-  createData(6, 'Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
-  createData(7, 'Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 0, 2),
-  createData(8, 'Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 0, 1),
-  createData(9, 'Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
-  createData(10, 'Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
+  createData(1, 'Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
+  createData(2, 'Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
+  createData(3, 'Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
+  createData(4, 'Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
 ];
 
 function descendingComparator(a, b, orderBy) {

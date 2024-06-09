@@ -14,7 +14,7 @@ export default function Search() {
     <Box sx={{ width: '100%', ml: { xs: 0, md: 1 }, display: 'flex', justifyContent: 'flex-end', pr: 2 }}>
       <FormControl sx={{ width: { xs: '100%', md: 250 } }}>
         <OutlinedInput
-          size="large"
+          size="medium"
           id="header-search"
           startAdornment={
             <InputAdornment position="start" sx={{ mr: -0.5 }}>
