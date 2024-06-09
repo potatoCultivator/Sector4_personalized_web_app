@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 
+
 // project import
 import MainCard from 'components/MainCard';
 import RegistrationCrud from './registrationCrud'
@@ -22,26 +23,27 @@ import SampleTab from './sampleTab';
 
 export default function Registration() {
   const [value, setValue] = useState(0);
+  const [optVal, setOptVal] = useState('cbc');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const currencies = [
+  const churchName = [
     {
-      value: 'USD',
+      optVal: 'cbc',
       label: 'CBC',
     },
     {
-      value: 'EUR',
+      optVal: 'cbca',
       label: 'CBC Albuera',
     },
     {
-      value: 'BTC',
+      optVal: 'cbms',
       label: 'CBM San Agustin',
     },
     {
-      value: 'JPY',
+      optVal: 'cbmg',
       label: 'CBM Gacat',
     },
   ];
@@ -78,7 +80,7 @@ export default function Registration() {
                   defaultValue="EUR"
                   variant="standard"
                 >
-                  {currencies.map((option) => (
+                  {churchName.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -98,6 +100,22 @@ export default function Registration() {
           <Grid item>
             <Typography variant="h5">Current Attendees</Typography>
           </Grid>
+          <Grid item>
+            <TextField
+            id="standard-select-churchName"
+            size="small"
+            select
+            value={optVal}
+            onChange={(e) => setOptVal(e.target.value)}
+            sx={{ '& .MuiInputBase-input': { py: 0.75, fontSize: '0.875rem' } }}
+          >
+            {churchName.map((option) => (
+              <MenuItem key={option.optVal} value={option.optVal}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          </Grid>
           <Grid item />
         </Grid>
         <SampleTab />
@@ -110,6 +128,22 @@ export default function Registration() {
             <Typography variant="h5">Current Attendees</Typography>
           </Grid>
           <Grid item />
+          <Grid item>
+            <TextField
+            id="standard-select-churchName"
+            size="small"
+            select
+            value={optVal}
+            onChange={(e) => setOptVal(e.target.value)}
+            sx={{ '& .MuiInputBase-input': { py: 0.75, fontSize: '0.875rem' } }}
+          >
+            {churchName.map((option) => (
+              <MenuItem key={option.optVal} value={option.optVal}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          </Grid>
         </Grid>
         
         <SortingTab />

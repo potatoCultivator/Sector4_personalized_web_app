@@ -131,17 +131,17 @@ export default function BasicTabs() {
           )}
       </Box>
         </MainCard>
-      <CustomTabPanel value={value} index={0}>
-        <MainCard>
-        <AttendeesTable />
-        </MainCard>
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <SampleTable1 />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <SampleTable2 />
-      </CustomTabPanel>
+      <MainCard>
+        <CustomTabPanel value={value} index={0}>
+            <AttendeesTable />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+            <SampleTable1 />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+            <SampleTable2 />
+        </CustomTabPanel>
+      </MainCard>
     </Box>
   );
 }
