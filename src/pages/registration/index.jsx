@@ -63,7 +63,7 @@ export default function Registration() {
       </Grid>
 
       {/* row 2 */}
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item xs={6}>
             <Typography variant="h5">Current Attendees</Typography>
@@ -90,7 +90,7 @@ export default function Registration() {
         </Grid>
         
         <SortingTab />
-      </Grid>
+      </Grid> */}
 
       {/* row 2 */}
       <Grid item xs={12}>
@@ -101,19 +101,6 @@ export default function Registration() {
           <Grid item />
         </Grid>
         <SampleTab />
-      </Grid>
-      {/* row 2 */}
-      <Grid item xs={12}>
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item>
-            <Typography variant="h5">Current Attendees</Typography>
-          </Grid>
-          <Grid item />
-        </Grid>
-        <MainCard>
-          <AttendeesTable />
-        </MainCard>
-        
       </Grid>
 
       {/* row 3 */}
