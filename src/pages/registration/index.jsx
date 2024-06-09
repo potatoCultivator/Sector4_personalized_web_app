@@ -13,6 +13,7 @@ import AddRegistrant from './addRegistrant'
 import Search from './Search';
 import TableTab from './TableTab';
 import SortingTab from './SortingTab';
+import SampleTab from './sampleTab';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -47,6 +48,30 @@ export default function Registration() {
           <Grid item />
         </Grid>
         <SortingTab />
+      </Grid>
+
+      {/* row 2 */}
+      <Grid item xs={12}>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h5">Current Attendees</Typography>
+          </Grid>
+          <Grid item />
+        </Grid>
+        <SampleTab />
+      </Grid>
+      {/* row 2 */}
+      <Grid item xs={12}>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h5">Current Attendees</Typography>
+          </Grid>
+          <Grid item />
+        </Grid>
+        <MainCard>
+          <AttendeesTable />
+        </MainCard>
+        
       </Grid>
 
       {/* row 3 */}
