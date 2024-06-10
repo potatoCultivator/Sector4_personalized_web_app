@@ -18,6 +18,7 @@ import Search from './Search';
 import TableTab from './TableTab';
 import SortingTab from './SortingTab';
 import SampleTab from './sampleTab';
+import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -30,6 +31,10 @@ export default function Registration() {
   };
 
   const churchName = [
+    {
+      optVal: 'all',
+      label: 'All Churches',
+    },
     {
       optVal: 'cbc',
       label: 'CBC',
@@ -52,9 +57,24 @@ export default function Registration() {
   return (
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
       {/* row 1 */}
-      <Grid item xs={12} sx={{ mb: 2.25 }}>
+      <Grid item xs={12} sx={{ mb: -2.25 }}>
         <Typography variant="h5">Registration</Typography>
       </Grid>
+      <Grid item xs={12} sm={6} md={4} lg={3}>
+        <AnalyticEcommerce title="Previews Budget" count="₱35,078" percentage={59.3} extra="₱35,000" />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4} lg={3}>
+        <AnalyticEcommerce title="Current Fund" count="₱35,078" percentage={70.5} extra="₱8,900" />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4} lg={3}>
+        <AnalyticEcommerce title="Total Attendees" count="18,800" percentage={27.4} isLoss color="warning" extra="1,943" />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4} lg={3}>
+      <AnalyticEcommerce title="Total Church Attended" count="35,078" percentage={27.4} isLoss color="warning" extra="395" />
+      </Grid>
+
+      <Grid item md={8} sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} />
+
       <Grid item xs={12}>
         <MainCard title="Registration">
             <Typography variant="body2">
@@ -63,67 +83,9 @@ export default function Registration() {
         
         </MainCard>
       </Grid>
-
-      {/* row 2 */}
-      {/* <Grid item xs={12}>
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item xs={6}>
-            <Typography variant="h5">Current Attendees</Typography>
-           
-            </Grid>
-            <Grid item xs={6}>
-              <Box display="flex" alignItems="flex-start">
-                <TextField
-                  id="standard-select-currency"
-                  select
-                  label="Select a Church"
-                  defaultValue="EUR"
-                  variant="standard"
-                >
-                  {churchName.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Box>
-            </Grid>
-          <Grid item />
-        </Grid>
-        
-        <SortingTab />
-      </Grid> */}
-
-      {/* row 2 */}
-      <Grid item xs={12}>
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item>
-            <Typography variant="h5">Current Attendees</Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-            id="standard-select-churchName"
-            size="small"
-            select
-            value={optVal}
-            onChange={(e) => setOptVal(e.target.value)}
-            sx={{ '& .MuiInputBase-input': { py: 0.75, fontSize: '0.875rem' } }}
-          >
-            {churchName.map((option) => (
-              <MenuItem key={option.optVal} value={option.optVal}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          </Grid>
-          <Grid item />
-        </Grid>
-        <SampleTab />
-      </Grid>
-
       {/* row 3 */}
       <Grid item xs={12} md={7} lg={8}>
-        <Grid container alignItems="center" justifyContent="space-between">
+        <Grid container alignItems="center" justifyContent="space-between" sx={{ paddingBottom: '16px' }}>
           <Grid item>
             <Typography variant="h5">Current Attendees</Typography>
           </Grid>
@@ -145,9 +107,7 @@ export default function Registration() {
           </TextField>
           </Grid>
         </Grid>
-        
         <SortingTab />
-
       </Grid>
       <Grid item xs={12} md={5} lg={4}>
         <Grid container alignItems="center" justifyContent="space-between">

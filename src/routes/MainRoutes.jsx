@@ -9,6 +9,8 @@ const Typography = Loadable(lazy(() => import('pages/component-overview/typograp
 const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const Registration = Loadable(lazy(() => import('pages/registration/index')));
+const FinancialOverview = Loadable(lazy(() => import('pages/financial-overview/index')));
+
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
@@ -30,6 +32,10 @@ const MainRoutes = {
     {
       path: '/registration',
       element: <Registration />
+    },
+    {
+      path: '/financial-overview',
+      element: <FinancialOverview />
     },
     {
       path: 'color',

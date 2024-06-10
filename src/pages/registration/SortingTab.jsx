@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { alpha } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 // project import
 import AttendeesTable from './AttendeesTable';
@@ -43,9 +44,10 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs() {
+export default function SortingTab() {
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -54,7 +56,7 @@ export default function BasicTabs() {
   return (
     <Box sx={{ width: '100%' }}>
       <MainCard>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider'}}>
+      <Box >
         <Tabs value={value} onChange={handleChange} TabIndicatorProps={{ style: { backgroundColor: 'black' } }}>
 
           <Tab 
@@ -105,7 +107,7 @@ export default function BasicTabs() {
           disableRipple
           label={
             <Box display="flex" alignItems="center" gap={1}>
-                <span style={{ color: value === 2 ? 'black' : theme.palette.secondary.dark }}>Unpaid</span>
+                <span style={{ color: value === 2 ? 'black' : theme.palette.secondary.main }}>Unpaid</span>
                 <Chip 
                 label="4" 
                 size="small" 
@@ -117,23 +119,29 @@ export default function BasicTabs() {
             </Box>
             }  
           {...a11yProps(2)} />
-          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                <Search />
+
+          {!isMobile && (
+            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+              <Search />
             </Box>
+          )}
         </Tabs>
+        {isMobile && (
+           <Search />
+          )}
       </Box>
         </MainCard>
-      <CustomTabPanel value={value} index={0}>
-        <MainCard>
-        <AttendeesTable />
-        </MainCard>
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <SampleTable1 />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <SampleTable2 />
-      </CustomTabPanel>
+      <MainCard>
+        <CustomTabPanel value={value} index={0}>
+            <AttendeesTable />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+            <SampleTable1 />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+            <SampleTable2 />
+        </CustomTabPanel>
+      </MainCard>
     </Box>
   );
 }

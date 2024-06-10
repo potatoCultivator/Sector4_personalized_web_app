@@ -1,12 +1,11 @@
 // assets
-import { DashboardOutlined } from '@ant-design/icons';
-import { UsergroupAddOutlined } from '@ant-design/icons';
-
+import { DashboardOutlined, UsergroupAddOutlined, BankOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
   DashboardOutlined,
-  UsergroupAddOutlined
+  UsergroupAddOutlined,
+  BankOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -30,6 +29,14 @@ const dashboard = {
       type: 'item',
       url: '/registration',
       icon: icons.UsergroupAddOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'financial-overview',
+      title: 'Financial Overview',
+      type: 'item',
+      url: '/financial-overview',
+      icon: icons.BankOutlined,
       breadcrumbs: false
     }
   ]
