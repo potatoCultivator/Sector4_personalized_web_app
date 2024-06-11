@@ -7,7 +7,10 @@ import Tab from '@mui/material/Tab';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
-
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -85,7 +88,7 @@ export default function Registration() {
       </Grid>
       {/* row 3 */}
       <Grid item xs={12} md={7} lg={8}>
-        <Grid container alignItems="center" justifyContent="space-between" sx={{ paddingBottom: '16px' }}>
+        <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
             <Typography variant="h5">Current Attendees</Typography>
           </Grid>
@@ -107,6 +110,15 @@ export default function Registration() {
           </TextField>
           </Grid>
         </Grid>
+        <Grid item >
+              <Button disableRipple variant="text" color="secondary" startIcon={<FileDownloadOutlinedIcon />}>
+                Export
+              </Button>
+
+              <Button disableRipple variant="text" color="secondary" startIcon={<FileUploadOutlinedIcon />}>
+                Import
+              </Button>
+            </Grid>
         <SortingTab />
       </Grid>
       <Grid item xs={12} md={5} lg={4}>

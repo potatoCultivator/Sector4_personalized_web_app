@@ -10,13 +10,15 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import { EditOutlined } from '@ant-design/icons';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useTheme } from '@emotion/react';
+import { useState } from 'react';
+import Papa from 'papaparse';
+import { saveAs } from 'file-saver';
+import Button from '@mui/material/Button';
 
 // third-party
 import { NumericFormat } from 'react-number-format';
@@ -27,6 +29,12 @@ import Dot from 'components/@extended/Dot';
 // function createData(tracking_no, name, fat, carbs, protein) {
 //   return { tracking_no, name, fat, carbs, protein };
 // }
+
+function exportToCSV(rows) {
+  const csv = Papa.unparse(rows);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  saveAs(blob, 'Attendees.csv');
+}
 
 function createData(tracking_no,church ,name, acadStat, stat, regStat) {
   return { tracking_no,church ,name, acadStat, stat, regStat };
@@ -119,7 +127,11 @@ const headCells = [
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function AttendeesTableHead({ order, orderBy }) {
+function AttendeesTableHead({ order, orderBy, onRequestSort }) {
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
   return (
     <TableHead>
       <TableRow>
@@ -129,8 +141,14 @@ function AttendeesTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            onClick={headCell.id !== 'action' ? createSortHandler(headCell.id) : undefined}
           >
             {headCell.label}
+            {orderBy === headCell.id ? (
+              <Box component="span">
+                {order === 'desc' ? ' 🔽' : ' 🔼'}
+              </Box>
+            ) : null}
           </TableCell>
         ))}
       </TableRow>
@@ -196,12 +214,20 @@ function RegistrationPayment({paymentStats})
 // ==============================|| ORDER TABLE ||============================== //
 
 export default function AttendeesTable() {
-  const order = 'asc';
-  const orderBy = 'tracking_no';
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('tracking_no');
   const theme = useTheme();
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
 
   return (
     <Box>
+      <Button onClick={() => exportToCSV(rows)}>Export to CSV</Button>
       <TableContainer
         sx={{
           width: '100%',
@@ -213,7 +239,7 @@ export default function AttendeesTable() {
         }}
       >
         <Table aria-labelledby="tableTitle">
-          <AttendeesTableHead order={order} orderBy={orderBy} />
+        <AttendeesTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
           <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
