@@ -132,8 +132,6 @@ export default function Registration() {
           <AddRegistrant />
         </MainCard>
       </Grid>
-      
-      
     </Grid>
   );
 }

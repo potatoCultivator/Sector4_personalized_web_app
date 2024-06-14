@@ -10,13 +10,15 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import { EditOutlined } from '@ant-design/icons';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useTheme } from '@emotion/react';
+import { useState } from 'react';
+import Papa from 'papaparse';
+import { saveAs } from 'file-saver';
+import Button from '@mui/material/Button';
 
 // third-party
 import { NumericFormat } from 'react-number-format';
@@ -28,6 +30,12 @@ import Dot from 'components/@extended/Dot';
 //   return { tracking_no, name, fat, carbs, protein };
 // }
 
+function exportToCSV(rows) {
+  const csv = Papa.unparse(rows);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  saveAs(blob, 'Attendees.csv');
+}
+
 function createData(tracking_no,church ,name, acadStat, stat, regStat) {
   return { tracking_no,church ,name, acadStat, stat, regStat };
 }
@@ -35,10 +43,14 @@ function createData(tracking_no,church ,name, acadStat, stat, regStat) {
 const rows = [
   createData(1, 'Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 0, 2),
   createData(2, 'Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
-  createData(3, 'Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
-  createData(4, 'Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 0, 2),
-  createData(5, 'Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 0, 1),
-  createData(6, 'Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
+  createData(3, 'Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
+  createData(4, 'Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
+  createData(5, 'Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
+  createData(6, 'Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
+  createData(7, 'Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 0, 2),
+  createData(8, 'Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 0, 1),
+  createData(9, 'Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
+  createData(10, 'Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -115,7 +127,11 @@ const headCells = [
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function AttendeesTableHead({ order, orderBy }) {
+function AttendeesTableHead({ order, orderBy, onRequestSort }) {
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
   return (
     <TableHead>
       <TableRow>
@@ -125,8 +141,14 @@ function AttendeesTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            onClick={headCell.id !== 'action' ? createSortHandler(headCell.id) : undefined}
           >
             {headCell.label}
+            {orderBy === headCell.id ? (
+              <Box component="span">
+                {order === 'desc' ? ' 🔽' : ' 🔼'}
+              </Box>
+            ) : null}
           </TableCell>
         ))}
       </TableRow>
@@ -191,13 +213,21 @@ function RegistrationPayment({paymentStats})
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendeesTable() {
-  const order = 'asc';
-  const orderBy = 'tracking_no';
+export default function AttendeesTable({ attendeesStat }) {
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('tracking_no');
   const theme = useTheme();
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
 
   return (
     <Box>
+      <Button onClick={() => exportToCSV(rows)}>Export to CSV</Button>
       <TableContainer
         sx={{
           width: '100%',
@@ -209,9 +239,9 @@ export default function AttendeesTable() {
         }}
       >
         <Table aria-labelledby="tableTitle">
-          <AttendeesTableHead order={order} orderBy={orderBy} />
+        <AttendeesTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
           <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+            {stableSort(rows, getComparator(order, orderBy)).filter(row => row.stat === attendeesStat).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
@@ -262,3 +292,5 @@ AttendeesTableHead.propTypes = { order: PropTypes.any, orderBy: PropTypes.string
 AttendeesStatus.propTypes = { status: PropTypes.any };
 
 RegistrationPayment.propTypes = { registration: PropTypes.any }
+
+AttendeesTable.propTypes = { attendeesStat: PropTypes.int };

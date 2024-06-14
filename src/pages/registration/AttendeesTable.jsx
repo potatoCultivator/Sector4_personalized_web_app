@@ -213,7 +213,7 @@ function RegistrationPayment({paymentStats})
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendeesTable() {
+export default function AttendeesTable({ attendeesStat }) {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('tracking_no');
   const theme = useTheme();
@@ -241,7 +241,7 @@ export default function AttendeesTable() {
         <Table aria-labelledby="tableTitle">
         <AttendeesTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
           <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+            {stableSort(rows, getComparator(order, orderBy)).filter(row => attendeesStat === 2 ? row.stat == 0 || 1 : row.stat === attendeesStat).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
@@ -292,3 +292,5 @@ AttendeesTableHead.propTypes = { order: PropTypes.any, orderBy: PropTypes.string
 AttendeesStatus.propTypes = { status: PropTypes.any };
 
 RegistrationPayment.propTypes = { registration: PropTypes.any }
+
+AttendeesTable.propTypes = { attendeesStat: PropTypes.int };

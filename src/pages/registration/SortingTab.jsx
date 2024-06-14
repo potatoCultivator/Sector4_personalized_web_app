@@ -15,6 +15,23 @@ import Search from './Search';
 import SampleTable1 from './sampleTable1';
 import SampleTable2 from './sampleTable2';
 
+function createData(tracking_no,church ,name, acadStat, stat, regStat) {
+  return { tracking_no,church ,name, acadStat, stat, regStat };
+}
+
+const rows = [
+  createData(1, 'Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 0, 2),
+  createData(2, 'Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
+  createData(3, 'Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
+  createData(4, 'Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
+  createData(5, 'Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
+  createData(6, 'Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
+  createData(7, 'Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 0, 2),
+  createData(8, 'Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 0, 1),
+  createData(9, 'Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
+  createData(10, 'Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
+];
+
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -44,7 +61,7 @@ function a11yProps(index) {
   };
 }
 
-export default function SortingTab() {
+export default function SortingTab({ rows }) {
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -133,13 +150,13 @@ export default function SortingTab() {
         </MainCard>
       <MainCard>
         <CustomTabPanel value={value} index={0}>
-            <AttendeesTable />
+            <AttendeesTable attendeesStat={2}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-            <SampleTable1 />
+            <AttendeesTable attendeesStat={0}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-            <SampleTable2 />
+          <AttendeesTable attendeesStat={1}/>
         </CustomTabPanel>
       </MainCard>
     </Box>
