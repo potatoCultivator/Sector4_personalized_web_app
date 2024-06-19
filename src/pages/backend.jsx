@@ -25,4 +25,10 @@ async function fetchAllRows() {
     return rows;
   }
 
-export { uploadList, fetchAllRows };
+  async function updateRow(tracking_no, newData) {
+    const db = firestore;
+    const docRef = doc(db, "attendeesList", tracking_no);
+    await updateDoc(docRef, newData);
+  }
+  
+  export { uploadList, fetchAllRows, updateRow };

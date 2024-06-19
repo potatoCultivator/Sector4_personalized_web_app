@@ -15,22 +15,35 @@ import { EditOutlined } from '@ant-design/icons';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useTheme } from '@emotion/react';
-import { useState } from 'react';
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
 import Button from '@mui/material/Button';
-import { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
 
 // third-party
 import { NumericFormat } from 'react-number-format';
 
 // project import
 import Dot from 'components/@extended/Dot';
-// AttendeesTable.jsx
-import { uploadList, fetchAllRows } from '../backend';
-// function createData(tracking_no, name, fat, carbs, protein) {
-//   return { tracking_no, name, fat, carbs, protein };
-// }
+import { uploadList, fetchAllRows, updateRow } from '../backend';
+
+// ===========================||  Functions ||=========================== //
+
+async function handleEdit(tracking_no, newData) {
+  // Update the row in the state
+  const newRows = rows.map(row => row.tracking_no === tracking_no ? newData : row);
+  setRows(newRows);
+
+  // Update the row in the backend
+  await updateRow(tracking_no, newData);
+}
 
 function exportToCSV(rows) {
   const csv = Papa.unparse(rows);
@@ -216,6 +229,18 @@ export default function AttendeesTable({ attendeesStat }) {
     };
   }, []);
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    Papa.parse(file, {
+      header: true,
+      complete: function(results) {
+      const newRows = results.data.map((row, index) => createData(index+1, row.church, row.name, row.acadStat, parseInt(row.stat), parseInt(row.regStat)));
+      uploadList(newRows);
+        setRows(newRows);
+      }
+    });
+  };
+
   useEffect(() => {
     // Fetch data from Firebase
     const fetchData = async () => {
@@ -228,17 +253,6 @@ export default function AttendeesTable({ attendeesStat }) {
     // ...existing code...
   }, []);
 
-  const handleFileChange = (event) => {
-  const file = event.target.files[0];
-  Papa.parse(file, {
-    header: true,
-    complete: function(results) {
-     const newRows = results.data.map((row, index) => createData(index+1, row.church, row.name, row.acadStat, parseInt(row.stat), parseInt(row.regStat)));
-     uploadList(newRows);
-      setRows(newRows);
-    }
-  });
-};
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -247,68 +261,103 @@ export default function AttendeesTable({ attendeesStat }) {
   };
 
 
-  return (
-    <Box>
-       <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
-       <Button onClick={() => fileInputRef.current.click()}>Import CSV</Button>
-      <Button onClick={() => exportToCSV(rows)}>Export to CSV</Button>
-      <TableContainer
-        sx={{
-          width: '100%',
-          overflowX: 'auto',
-          position: 'relative',
-          display: 'block',
-          maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
-        }}
-      >
-        <Table aria-labelledby="tableTitle">
-        <AttendeesTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
-          <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).filter(row => attendeesStat === 2 ? row.stat == 0 || 1 : row.stat === attendeesStat).map((row, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
+  const [open, setOpen] = React.useState(false);
 
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  tabIndex={-1}
-                  key={row.tracking_no}
-                >
-                  <TableCell align="center" component="th" id={labelId} scope="row">
-                    <Link color="secondary"> {row.tracking_no}</Link>
-                  </TableCell>
-                  <TableCell>{row.church}</TableCell>
-                  <TableCell align="left">{row.name}</TableCell>
-                  <TableCell align="right">{row.acadStat}</TableCell>
-                  <TableCell>
-                    <AttendeesStatus status={row.stat} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <RegistrationPayment paymentStats={row.regStat} />
-                    {/* <NumericFormat value={row.protein} displayType="text" thousandSeparator prefix="$" /> */}
-                  </TableCell>
-                  <TableCell align="center">
-                    <Tooltip title="Edit" placement="top">
-                      <IconButton color="black" onClick={() => { console.log("Edit button clicked"); }}>
-                        <EditOutlined />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete" placement="top">
-                      <IconButton style={{ color: theme.palette.error.main }} onClick={() => { console.log("Delete button clicked"); }}>
-                        <DeleteOutlineIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
-  );
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  return (
+  <Box>
+    <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
+    <Button onClick={() => fileInputRef.current.click()}>Import CSV</Button>
+    <Button onClick={() => exportToCSV(rows)}>Export to CSV</Button>
+    <TableContainer
+      sx={{
+        width: '100%',
+        overflowX: 'auto',
+        position: 'relative',
+        display: 'block',
+        maxWidth: '100%',
+        '& td, & th': { whiteSpace: 'nowrap' }
+      }}
+    >
+      <Table aria-labelledby="tableTitle">
+      <AttendeesTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
+        <TableBody>
+          {stableSort(rows, getComparator(order, orderBy)).filter(row => attendeesStat === 2 ? row.stat == 0 || 1 : row.stat === attendeesStat).map((row, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+
+            return (
+              <TableRow
+                hover
+                role="checkbox"
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                tabIndex={-1}
+                key={row.tracking_no}
+              >
+                <TableCell align="center" component="th" id={labelId} scope="row">
+                  <Link color="secondary"> {row.tracking_no}</Link>
+                </TableCell>
+                <TableCell>{row.church}</TableCell>
+                <TableCell align="left">{row.name}</TableCell>
+                <TableCell align="right">{row.acadStat}</TableCell>
+                <TableCell>
+                  <AttendeesStatus status={row.stat} />
+                </TableCell>
+                <TableCell align="right">
+                  <RegistrationPayment paymentStats={row.regStat} />
+                  {/* <NumericFormat value={row.protein} displayType="text" thousandSeparator prefix="$" /> */}
+                </TableCell>
+                <TableCell align="center">
+                  <Tooltip title="Edit" placement="top">
+                    <IconButton color="black" onClick={handleOpen}>
+                      <EditOutlined />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete" placement="top">
+                    <IconButton style={{ color: theme.palette.error.main }} onClick={() => handleEdit(row.tracking_no, newData)}>
+                      <DeleteOutlineIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+
+    {/* Dialog goes here */}
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>Edit Row</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          To edit this row, please enter the new data here.
+        </DialogContentText>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="name"
+          label="Name"
+          type="text"
+          fullWidth
+          variant="standard"
+        />
+        {/* Add more TextFields for other data */}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={() => { handleEdit(row.tracking_no, newData); handleClose(); }}>Save</Button>
+      </DialogActions>
+    </Dialog>
+  </Box>
+);
 }
 
 AttendeesTableHead.propTypes = { order: PropTypes.any, orderBy: PropTypes.string };

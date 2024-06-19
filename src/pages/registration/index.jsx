@@ -2,26 +2,18 @@
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 
 // project import
 import MainCard from 'components/MainCard';
-import RegistrationCrud from './registrationCrud'
-import AttendeesTable from './AttendeesTable';
 import AddRegistrant from './addRegistrant'
-import Search from './Search';
-import TableTab from './TableTab';
 import SortingTab from './SortingTab';
-import SampleTab from './sampleTab';
 import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
+import ImportExportButton from './import-export-button';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -111,14 +103,8 @@ export default function Registration() {
           </Grid>
         </Grid>
         <Grid item >
-              <Button disableRipple variant="text" color="secondary" startIcon={<FileDownloadOutlinedIcon />}>
-                Export
-              </Button>
-
-              <Button disableRipple variant="text" color="secondary" startIcon={<FileUploadOutlinedIcon />}>
-                Import
-              </Button>
-            </Grid>
+           <ImportExportButton />
+        </Grid>
         <SortingTab />
       </Grid>
       <Grid item xs={12} md={5} lg={4}>
