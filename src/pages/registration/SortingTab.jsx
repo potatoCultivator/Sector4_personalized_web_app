@@ -7,30 +7,14 @@ import Chip from '@mui/material/Chip';
 import { alpha } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useEffect } from 'react';
 
 // project import
 import AttendeesTable from './AttendeesTable';
 import MainCard from 'components/MainCard';
 import Search from './Search';
-import SampleTable1 from './sampleTable1';
-import SampleTable2 from './sampleTable2';
-
-function createData(tracking_no,church ,name, acadStat, stat, regStat) {
-  return { tracking_no,church ,name, acadStat, stat, regStat };
-}
-
-const rows = [
-  createData(1, 'Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 0, 2),
-  createData(2, 'Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
-  createData(3, 'Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
-  createData(4, 'Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
-  createData(5, 'Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
-  createData(6, 'Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
-  createData(7, 'Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 0, 2),
-  createData(8, 'Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 0, 1),
-  createData(9, 'Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
-  createData(10, 'Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
-];
+import { fetchAllRows } from '../backend';
+import { set } from 'lodash';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,14 +45,40 @@ function a11yProps(index) {
   };
 }
 
-export default function SortingTab({ rows }) {
+export default function SortingTab() {
   const [value, setValue] = React.useState(0);
+  const [paid, setPaid] = React.useState(0);
+  const [unpaid, setUnpaid] = React.useState(0);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  // useEffect(() => {
+  //   fetchAllRows().then((data) => {
+  //     console.log(data);
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    fetchAllRows().then((data) => {
+      const counts = data.reduce((acc, curr) => {
+        if (curr.stat === 0) {
+          acc.zeros += 1;
+          setPaid(acc.zeros);
+        } else if (curr.stat === 1) {
+          acc.ones += 1;
+          setUnpaid(acc.ones);
+        }
+        return acc;
+      }, { zeros: 0, ones: 0 });
+
+      console.log(counts);
+    });
+  }, []);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -92,7 +102,7 @@ export default function SortingTab({ rows }) {
             <Box display="flex" alignItems="center" gap={1}>
                 <span style={{ color: value === 0? 'black' : theme.palette.secondary.main }}>All</span>
                 <Chip 
-                    label="10" 
+                    label={paid + unpaid}
                     size="small" 
                     style={{
                         backgroundColor: value === 0 ? theme.palette.primary.main : alpha(theme.palette.primary.main, 0.2),
@@ -109,7 +119,7 @@ export default function SortingTab({ rows }) {
             <Box display="flex" alignItems="center" gap={1}>
                 <span style={{ color: value === 1 ? 'black' : theme.palette.secondary.main }}>Paid</span>
                 <Chip 
-                    label="6" 
+                    label={paid}
                     size="small" 
                     style={{
                         backgroundColor: value === 1 ? theme.palette.success.main : alpha(theme.palette.success.main, 0.2),
@@ -126,7 +136,7 @@ export default function SortingTab({ rows }) {
             <Box display="flex" alignItems="center" gap={1}>
                 <span style={{ color: value === 2 ? 'black' : theme.palette.secondary.main }}>Unpaid</span>
                 <Chip 
-                label="4" 
+                label={unpaid}
                 size="small" 
                 style={{
                     backgroundColor: value === 2 ? theme.palette.error.main : alpha(theme.palette.error.main, 0.2),

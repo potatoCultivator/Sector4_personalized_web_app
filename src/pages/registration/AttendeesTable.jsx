@@ -19,13 +19,15 @@ import { useState } from 'react';
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
 import Button from '@mui/material/Button';
+import { useEffect, useRef } from 'react';
 
 // third-party
 import { NumericFormat } from 'react-number-format';
 
 // project import
 import Dot from 'components/@extended/Dot';
-
+// AttendeesTable.jsx
+import { uploadList, fetchAllRows } from '../backend';
 // function createData(tracking_no, name, fat, carbs, protein) {
 //   return { tracking_no, name, fat, carbs, protein };
 // }
@@ -35,23 +37,6 @@ function exportToCSV(rows) {
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   saveAs(blob, 'Attendees.csv');
 }
-
-function createData(tracking_no,church ,name, acadStat, stat, regStat) {
-  return { tracking_no,church ,name, acadStat, stat, regStat };
-}
-
-const rows = [
-  createData(1, 'Christ Baptist Mission Gacat', 'Jana Gian Mazo', 'College', 0, 2),
-  createData(2, 'Christ Baptist Mission Gacat', 'Shanelle Mazo', 'HighSchool', 0, 1),
-  createData(3, 'Christ Baptist Mission Gacat', 'Geselle Joy Mazo', 'HighSchool', 1, 1),
-  createData(4, 'Christ Baptist Mission Gacat', 'Cyrome Caraan', 'HighSchool', 1, 1),
-  createData(5, 'Christ Baptist Mission Gacat', 'Janelle Divya Mazo', 'HighSchool', 1, 1),
-  createData(6, 'Christ Baptist Mission San Agustin', 'Maria Regina Carmelotes', 'HighSchool', 0, 1),
-  createData(7, 'Christ Baptist Mission San Agustin', 'Harzelynne Torres', 'HighSchool', 0, 2),
-  createData(8, 'Christ Baptist Mission San Agustin', 'Joel John Argallon', 'HighSchool', 0, 1),
-  createData(9, 'Christ Baptist Mission San Agustin', 'Riclyn Argallon', 'College', 1, 2),
-  createData(10, 'Christ Baptist Mission San Agustin', 'Randall John Argallon', 'HighSchool', 0, 1)
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -216,7 +201,44 @@ function RegistrationPayment({paymentStats})
 export default function AttendeesTable({ attendeesStat }) {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('tracking_no');
+  const [rows, setRows] = useState([]);
+  const fileInputRef = useRef(null);
   const theme = useTheme();
+
+  useEffect(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.addEventListener('change', handleFileChange);
+    }
+    return () => {
+      if (fileInputRef.current) {
+        fileInputRef.current.removeEventListener('change', handleFileChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    // Fetch data from Firebase
+    const fetchData = async () => {
+      const data = await fetchAllRows();
+      setRows(data);
+    };
+
+    fetchData();
+
+    // ...existing code...
+  }, []);
+
+  const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  Papa.parse(file, {
+    header: true,
+    complete: function(results) {
+     const newRows = results.data.map((row, index) => createData(index+1, row.church, row.name, row.acadStat, parseInt(row.stat), parseInt(row.regStat)));
+     uploadList(newRows);
+      setRows(newRows);
+    }
+  });
+};
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -227,6 +249,8 @@ export default function AttendeesTable({ attendeesStat }) {
 
   return (
     <Box>
+       <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
+       <Button onClick={() => fileInputRef.current.click()}>Import CSV</Button>
       <Button onClick={() => exportToCSV(rows)}>Export to CSV</Button>
       <TableContainer
         sx={{
@@ -293,4 +317,4 @@ AttendeesStatus.propTypes = { status: PropTypes.any };
 
 RegistrationPayment.propTypes = { registration: PropTypes.any }
 
-AttendeesTable.propTypes = { attendeesStat: PropTypes.int };
+AttendeesTable.propTypes = { attendeesStat: PropTypes.any };
