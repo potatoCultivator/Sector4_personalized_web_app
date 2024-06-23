@@ -30,5 +30,17 @@ async function fetchAllRows() {
     const docRef = doc(db, "attendeesList", tracking_no);
     await updateDoc(docRef, newData);
   }
+
+  async function deleteRow(tracking_no) {
+    const db = firestore;
+    const docRef = doc(db, "attendeesList", tracking_no);
+    await deleteDoc(docRef);
+  }
+
+  async function uploadRow(data) {
+  const db = firestore;
+  await addDoc(collection(db, "attendeesList"), data);
+}
+
+  export { uploadList, fetchAllRows, updateRow, deleteRow, uploadRow};
   
-  export { uploadList, fetchAllRows, updateRow };

@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 
-import { Typography, Button, Card, CardContent, TextField, Grid } from '@mui/material';
+import { Typography, Button, Card, CardContent, TextField, Grid, Alert } from '@mui/material';
 // import Product from './product';
 import Snackbar from '@mui/material/Snackbar';
+
+import { uploadRow } from '../backend';
+import { create } from 'lodash';
+
+function createData(tracking_no,church ,name, acadStat, stat, regStat) {
+  return { tracking_no,church ,name, acadStat, stat, regStat };
+}
 
 export default function AddProductForm() {
   // Product state
@@ -11,19 +18,31 @@ export default function AddProductForm() {
   const [lastname, setLastname] = useState('');
   const [church, setChurch] = useState('None');
   const [academicStat, setAcademicStat] = useState('None');
-  const [status, setStatus] = useState(0);
+  const [status, setStatus] = useState(1);
   
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = React.useState('error');
   const date = new Date();
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
-  const year = date.getFullYear();
 
-  const handleAddProduct = async (e) => {
-    
-  };
+  const handleAddProduct = async () => {
+  setLoading(true); // Indicate loading state
+  try {
+    const data = createData(id, church, firstname + ' ' + lastname, academicStat, status, 'Registered');
+    await uploadRow(data);
+    setMessageType('success');
+    setMessage('Registration successful!'); // Set success message
+    setShowPopup(true); // Show success message
+    window.location.reload();
+  } catch (error) {
+    console.error(error);
+    setMessage('Failed to register. Please try again.'); // Set error message
+    setShowPopup(true); // Show error message
+  } finally {
+    setLoading(false); // Reset loading state
+  }
+};
 
   const hidePopup = () => {
     setShowPopup(false);
@@ -117,8 +136,8 @@ export default function AddProductForm() {
                 }}
                 SelectProps={{ native: true }}
               >
-                <option value="Unpaid">Unpaid</option>
-                <option value="Paid">Paid</option>
+                <option value={1}>Unpaid</option>
+                <option value={0}>Paid</option>
               </TextField>
           </Grid> 
           
@@ -138,13 +157,12 @@ export default function AddProductForm() {
         </Grid>
 
         {showPopup && (
-          <Snackbar
-            open={showPopup}
-            autoHideDuration={6000}
-            onClose={hidePopup}
-            message={message}
-          />
-        )}
+        <Snackbar open={showPopup} autoHideDuration={6000} onClose={hidePopup}>
+          <Alert onClose={hidePopup} severity={messageType} sx={{ width: '100%' }}>
+            {message}
+          </Alert>
+        </Snackbar>
+      )}
       </CardContent>
     </Card>
   );

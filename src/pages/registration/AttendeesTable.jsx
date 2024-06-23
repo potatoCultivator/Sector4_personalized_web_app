@@ -33,6 +33,7 @@ import { NumericFormat } from 'react-number-format';
 // project import
 import Dot from 'components/@extended/Dot';
 import { uploadList, fetchAllRows, updateRow } from '../backend';
+import AddRegistrant from './addRegistrant';
 
 // ===========================||  Functions ||=========================== //
 
@@ -168,8 +169,8 @@ function AttendeesStatus({ status }) {
       title = 'Unpaid';
       break;
     default:
-      color = 'primary';
-      title = 'None';
+      color = 'error';
+      title = 'Unpaid';
   }
 
   return (
@@ -274,9 +275,6 @@ export default function AttendeesTable({ attendeesStat }) {
 
   return (
   <Box>
-    <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
-    <Button onClick={() => fileInputRef.current.click()}>Import CSV</Button>
-    <Button onClick={() => exportToCSV(rows)}>Export to CSV</Button>
     <TableContainer
       sx={{
         width: '100%',
@@ -335,26 +333,7 @@ export default function AttendeesTable({ attendeesStat }) {
 
     {/* Dialog goes here */}
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Edit Row</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          To edit this row, please enter the new data here.
-        </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
-          fullWidth
-          variant="standard"
-        />
-        {/* Add more TextFields for other data */}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={() => { handleEdit(row.tracking_no, newData); handleClose(); }}>Save</Button>
-      </DialogActions>
+      <AddRegistrant />
     </Dialog>
   </Box>
 );
