@@ -15,32 +15,38 @@ async function uploadList(data) {
 }
 
 async function fetchAllRows() {
-    const db = firestore;
-    const querySnapshot = await getDocs(collection(db, "attendeesList"));
-  
-    const rows = querySnapshot.docs.map(doc => doc.data());
+  const db = firestore;
+  const querySnapshot = await getDocs(collection(db, "attendeesList"));
 
-    console.log(rows);
-  
-    return rows;
-  }
+  const rows = querySnapshot.docs.map(doc => doc.data());
 
-  async function updateRow(tracking_no, newData) {
-    const db = firestore;
-    const docRef = doc(db, "attendeesList", tracking_no);
-    await updateDoc(docRef, newData);
-  }
+  console.log(rows);
 
-  async function deleteRow(tracking_no) {
-    const db = firestore;
-    const docRef = doc(db, "attendeesList", tracking_no);
-    await deleteDoc(docRef);
-  }
+  return rows;
+}
 
-  async function uploadRow(data) {
+async function updateRow(tracking_no, newData) {
+  const db = firestore;
+  const docRef = doc(db, "attendeesList", tracking_no);
+  await updateDoc(docRef, newData);
+}
+
+async function deleteRow(tracking_no) {
+  const db = firestore;
+  const docRef = doc(db, "attendeesList", tracking_no);
+  await deleteDoc(docRef);
+}
+
+async function uploadRow(data) {
   const db = firestore;
   await addDoc(collection(db, "attendeesList"), data);
 }
 
-  export { uploadList, fetchAllRows, updateRow, deleteRow, uploadRow};
+async function countRows() {
+  const db = firestore;
+  const querySnapshot = await getDocs(collection(db, "attendeesList"));
+  return querySnapshot.docs.length; // Returns the count of documents in the collection
+}
+
+export { uploadList, fetchAllRows, updateRow, deleteRow, uploadRow, countRows };
   

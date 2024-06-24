@@ -17,15 +17,9 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useTheme } from '@emotion/react';
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
-import Button from '@mui/material/Button';
 import React, { useState, useEffect, useRef } from 'react';
 
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 
 // third-party
 import { NumericFormat } from 'react-number-format';
@@ -160,11 +154,11 @@ function AttendeesStatus({ status }) {
   let title;
 
   switch (status) {
-    case 0:
+    case 'Paid':
       color = 'success';
       title = 'Paid';
       break;
-    case 1:
+    case 'Unpaid':
       color = 'error';
       title = 'Unpaid';
       break;
@@ -188,16 +182,16 @@ function RegistrationPayment({paymentStats})
 
   switch(paymentStats)
   {
-    case 0:
+    case 'Elementary':
       payment = 30
       break;
-    case 1:
+    case 'High School':
       payment = 50
       break;
-    case 2:
+    case 'College':
       payment = 80
       break;
-    case 3:
+    case 'Young Prof':
       payment = 100
       break;
     default:
@@ -216,31 +210,8 @@ export default function AttendeesTable({ attendeesStat }) {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('tracking_no');
   const [rows, setRows] = useState([]);
-  const fileInputRef = useRef(null);
   const theme = useTheme();
 
-  useEffect(() => {
-    if (fileInputRef.current) {
-      fileInputRef.current.addEventListener('change', handleFileChange);
-    }
-    return () => {
-      if (fileInputRef.current) {
-        fileInputRef.current.removeEventListener('change', handleFileChange);
-      }
-    };
-  }, []);
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    Papa.parse(file, {
-      header: true,
-      complete: function(results) {
-      const newRows = results.data.map((row, index) => createData(index+1, row.church, row.name, row.acadStat, parseInt(row.stat), parseInt(row.regStat)));
-      uploadList(newRows);
-        setRows(newRows);
-      }
-    });
-  };
 
   useEffect(() => {
     // Fetch data from Firebase
@@ -248,10 +219,7 @@ export default function AttendeesTable({ attendeesStat }) {
       const data = await fetchAllRows();
       setRows(data);
     };
-
     fetchData();
-
-    // ...existing code...
   }, []);
 
 
@@ -288,7 +256,7 @@ export default function AttendeesTable({ attendeesStat }) {
       <Table aria-labelledby="tableTitle">
       <AttendeesTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
         <TableBody>
-          {stableSort(rows, getComparator(order, orderBy)).filter(row => attendeesStat === 2 ? row.stat == 0 || 1 : row.stat === attendeesStat).map((row, index) => {
+          {stableSort(rows, getComparator(order, orderBy)).filter(row => attendeesStat === 'All' ? row.stat == 'Paid' || 'Unpaid' : row.stat === attendeesStat).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
 
             return (
@@ -303,13 +271,13 @@ export default function AttendeesTable({ attendeesStat }) {
                   <Link color="secondary"> {row.tracking_no}</Link>
                 </TableCell>
                 <TableCell>{row.church}</TableCell>
-                <TableCell align="left">{row.name}</TableCell>
+                <TableCell align="left">{row.firstname + ' ' + row.lastname}</TableCell>
                 <TableCell align="right">{row.acadStat}</TableCell>
                 <TableCell>
                   <AttendeesStatus status={row.stat} />
                 </TableCell>
                 <TableCell align="right">
-                  <RegistrationPayment paymentStats={row.regStat} />
+                  <RegistrationPayment paymentStats={row.acadStat} />
                   {/* <NumericFormat value={row.protein} displayType="text" thousandSeparator prefix="$" /> */}
                 </TableCell>
                 <TableCell align="center">

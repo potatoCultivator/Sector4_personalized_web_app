@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Typography, Button, Card, CardContent, TextField, Grid, Alert } from '@mui/material';
 // import Product from './product';
 import Snackbar from '@mui/material/Snackbar';
 
-import { uploadRow } from '../backend';
-import { create } from 'lodash';
+import { uploadRow, countRows } from '../backend';
 
-function createData(tracking_no,church ,name, acadStat, stat, regStat) {
-  return { tracking_no,church ,name, acadStat, stat, regStat };
+function createData(tracking_no,church ,firstname, lastname, acadStat, stat, registration) {
+  return { tracking_no,church ,firstname, lastname, acadStat, stat, registration };
 }
 
 export default function AddProductForm() {
@@ -17,8 +16,9 @@ export default function AddProductForm() {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [church, setChurch] = useState('None');
-  const [academicStat, setAcademicStat] = useState('None');
-  const [status, setStatus] = useState(1);
+  const [academicStat, setAcademicStat] = useState('Elementary');
+  const [status, setStatus] = useState('Unpaid');
+  const [registration, setRegistration] = useState('Unpaid');
   
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -26,10 +26,12 @@ export default function AddProductForm() {
   const [messageType, setMessageType] = React.useState('error');
   const date = new Date();
 
-  const handleAddProduct = async () => {
+  const handleAddAttendee = async () => {
   setLoading(true); // Indicate loading state
+  console.log(id, church, firstname, lastname, academicStat, status, registration);
   try {
-    const data = createData(id, church, firstname + ' ' + lastname, academicStat, status, 'Registered');
+    updateId();
+    const data = createData(id, church, firstname, lastname, academicStat, status, registration);
     await uploadRow(data);
     setMessageType('success');
     setMessage('Registration successful!'); // Set success message
@@ -54,9 +56,36 @@ export default function AddProductForm() {
     }, 5000);
   }
 
-  const updateId = () => {
+  const updateId = async () => {
+  const count = await countRows();
+
+  if (count > 0) {
+    setId(count + 1);
+  } else {
     setId(id + 1);
   }
+}
+
+  useEffect(() => {
+    let payment;
+    switch(academicStat) {
+      case 'Elementary':
+        payment = 30;
+        break;
+      case 'High School':
+        payment = 50;
+        break;
+      case 'College':
+        payment = 80;
+        break;
+      case 'Young Prof':
+        payment = 100;
+        break;
+      default:
+        payment = 0;
+    }
+    setRegistration(payment);
+  }, [academicStat]); 
 
   const isRegisterDisabled = () => {
   return (
@@ -97,9 +126,10 @@ export default function AddProductForm() {
                   }}
                   SelectProps={{ native: true }}
                 >
-                  <option value="Grace Baptist Church">Grace Baptist Church</option>
-                  <option value="Christ Baptist Church">Christ Baptist Church</option>
-                  <option value="Christ Baptist Church Albuera">Christ Baptist Church Albuera</option>
+                  <option value='None'>None</option>
+                  <option value='Grace Baptist Church'>Grace Baptist Church</option>
+                  <option value='Christ Baptist Church'>Christ Baptist Church</option>
+                  <option value='Christ Baptist Church Albuera'>Christ Baptist Church Albuera</option>
               </TextField>
           </Grid> 
           
@@ -116,10 +146,10 @@ export default function AddProductForm() {
                   }}
                   SelectProps={{ native: true }}
                 >
-                  <option value="Elementary">Elementary</option>
-                  <option value="HighSchool">HighSchool</option>
-                  <option value="College">College</option>
-                  <option value="Young Prof">Young Prof</option>
+                  <option value='Elementary'>Elementary</option>
+                  <option value='HighSchool'>HighSchool</option>
+                  <option value='College'>College</option>
+                  <option value='Young Prof'>Young Prof</option>
               </TextField>
           </Grid> 
 
@@ -136,8 +166,8 @@ export default function AddProductForm() {
                 }}
                 SelectProps={{ native: true }}
               >
-                <option value={1}>Unpaid</option>
-                <option value={0}>Paid</option>
+                <option value='Unpaid'>Unpaid</option>
+                <option value='Paid'>Paid</option>
               </TextField>
           </Grid> 
           
@@ -148,7 +178,7 @@ export default function AddProductForm() {
               variant="contained" 
               sx={{ bgcolor: 'success.dark' }} 
               fullWidth 
-              onClick={handleAddProduct}
+              onClick={handleAddAttendee}
               disabled={loading || isRegisterDisabled()} // Add this line
             >
               {loading ? 'Uploading...' : 'Register'}

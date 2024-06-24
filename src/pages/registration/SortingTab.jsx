@@ -66,10 +66,10 @@ export default function SortingTab() {
   useEffect(() => {
     fetchAllRows().then((data) => {
       const counts = data.reduce((acc, curr) => {
-        if (curr.stat === 0) {
+        if (curr.stat === "Paid") {
           acc.zeros += 1;
           setPaid(acc.zeros);
-        } else if (curr.stat === 1) {
+        } else if (curr.stat === "Unpaid") {
           acc.ones += 1;
           setUnpaid(acc.ones);
         }
@@ -160,13 +160,13 @@ export default function SortingTab() {
         </MainCard>
       <MainCard>
         <CustomTabPanel value={value} index={0}>
-            <AttendeesTable attendeesStat={2}/>
+            <AttendeesTable attendeesStat={'All'}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-            <AttendeesTable attendeesStat={0}/>
+            <AttendeesTable attendeesStat={'Paid'}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <AttendeesTable attendeesStat={1}/>
+          <AttendeesTable attendeesStat={'Unpaid'}/>
         </CustomTabPanel>
       </MainCard>
     </Box>
