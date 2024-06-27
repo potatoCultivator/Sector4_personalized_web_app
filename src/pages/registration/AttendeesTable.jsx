@@ -18,16 +18,17 @@ import { useTheme } from '@emotion/react';
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
 import React, { useState, useEffect, useRef } from 'react';
+import Button from '@mui/material/Button';
 
 import Dialog from '@mui/material/Dialog';
-
+import { DialogTitle, DialogActions  } from '@mui/material';
 // third-party
 import { NumericFormat } from 'react-number-format';
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { uploadList, fetchAllRows, updateRow } from '../backend';
-import AddRegistrant from './addRegistrant';
+import { fetchAllRows, updateRow, deleteRow } from '../backend';
+import EditAttendeeInfo from './editInfo';
 
 // ===========================||  Functions ||=========================== //
 
@@ -185,7 +186,7 @@ function RegistrationPayment({paymentStats})
     case 'Elementary':
       payment = 30
       break;
-    case 'High School':
+    case 'HighSchool':
       payment = 50
       break;
     case 'College':
@@ -207,9 +208,12 @@ function RegistrationPayment({paymentStats})
 // ==============================|| ORDER TABLE ||============================== //
 
 export default function AttendeesTable({ attendeesStat }) {
+  const [count, setCount] = useState(0);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('tracking_no');
   const [rows, setRows] = useState([]);
+  const [currentRow, setCurrentRow] = useState(null);
+  const [open, setOpen] = React.useState(false);
   const theme = useTheme();
 
 
@@ -230,15 +234,46 @@ export default function AttendeesTable({ attendeesStat }) {
   };
 
 
-  const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
+  const handleOpen = (row) => {
+    setCurrentRow(row);
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = async () => {
+  setOpen(false);
+  // Refetch data from Firebase
+  const data = await fetchAllRows();
+  setRows(data);
+};
+
+
+// Add a state to manage the open/close state of the confirmation dialog
+const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+// Add a state to keep track of the row to be deleted
+const [rowToDelete, setRowToDelete] = useState(null);
+
+// Function to open the delete confirmation dialog
+const handleDeleteClick = (row) => {
+  setRowToDelete(row);
+  setOpenDeleteDialog(true);
+};
+
+// Function to close the delete confirmation dialog
+const handleCloseDeleteDialog = () => {
+  setOpenDeleteDialog(false);
+};
+
+// Function to confirm deletion
+const handleConfirmDelete = async () => {
+  await deleteRow(rowToDelete.id);
+  // Refetch data from Firebase or remove the row from the local state
+  const updatedRows = rows.filter(row => row.id !== rowToDelete.id);
+  setRows(updatedRows);
+  // Close the dialog
+  handleCloseDeleteDialog();
+};
+
 
 
   return (
@@ -268,7 +303,7 @@ export default function AttendeesTable({ attendeesStat }) {
                 key={row.tracking_no}
               >
                 <TableCell align="center" component="th" id={labelId} scope="row">
-                  <Link color="secondary"> {row.tracking_no}</Link>
+                  <Link color="secondary"> {index + 1}</Link>
                 </TableCell>
                 <TableCell>{row.church}</TableCell>
                 <TableCell align="left">{row.firstname + ' ' + row.lastname}</TableCell>
@@ -282,12 +317,12 @@ export default function AttendeesTable({ attendeesStat }) {
                 </TableCell>
                 <TableCell align="center">
                   <Tooltip title="Edit" placement="top">
-                    <IconButton color="black" onClick={handleOpen}>
+                    <IconButton color="black" onClick={() => handleOpen(row)}>
                       <EditOutlined />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Delete" placement="top">
-                    <IconButton style={{ color: theme.palette.error.main }} onClick={() => handleEdit(row.tracking_no, newData)}>
+                  <IconButton style={{ color: theme.palette.error.main }} onClick={() => handleDeleteClick(row)}>
                       <DeleteOutlineIcon />
                     </IconButton>
                   </Tooltip>
@@ -301,8 +336,18 @@ export default function AttendeesTable({ attendeesStat }) {
 
     {/* Dialog goes here */}
     <Dialog open={open} onClose={handleClose}>
-      <AddRegistrant />
+      <EditAttendeeInfo row={currentRow} />
     </Dialog>
+
+    <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+    <DialogTitle>{"Are you sure you want to delete this row?"}</DialogTitle>
+    <DialogActions>
+      <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
+      <Button onClick={handleConfirmDelete} autoFocus>
+        Confirm
+      </Button>
+    </DialogActions>
+  </Dialog>
   </Box>
 );
 }

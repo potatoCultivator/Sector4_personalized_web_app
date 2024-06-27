@@ -1,6 +1,6 @@
 // uploadList.js
 import { firestore } from '../firebase';
-import { collection, addDoc, writeBatch, doc, getDocs } from "firebase/firestore"; 
+import { collection, addDoc, writeBatch, doc, getDocs, updateDoc, deleteDoc } from "firebase/firestore"; 
 
 async function uploadList(data) {
   const db = firestore;
@@ -18,9 +18,12 @@ async function fetchAllRows() {
   const db = firestore;
   const querySnapshot = await getDocs(collection(db, "attendeesList"));
 
-  const rows = querySnapshot.docs.map(doc => doc.data());
+  const rows = querySnapshot.docs.map(doc => ({
+    id: doc.id, // Include the document ID
+    ...doc.data() // Spread the document data
+  }));
 
-  console.log(rows);
+  // console.log(rows);
 
   return rows;
 }
@@ -28,6 +31,7 @@ async function fetchAllRows() {
 async function updateRow(tracking_no, newData) {
   const db = firestore;
   const docRef = doc(db, "attendeesList", tracking_no);
+
   await updateDoc(docRef, newData);
 }
 

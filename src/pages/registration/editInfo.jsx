@@ -4,38 +4,36 @@ import { Typography, Button, Card, CardContent, TextField, Grid, Alert } from '@
 // import Product from './product';
 import Snackbar from '@mui/material/Snackbar';
 
-import { uploadRow, countRows } from '../backend';
+import { uploadRow,updateRow } from '../backend';
 
 function createData(tracking_no,church ,firstname, lastname, acadStat, stat, registration) {
   return { tracking_no,church ,firstname, lastname, acadStat, stat, registration };
 }
 
-export default function AddProductForm() {
+export default function EditAttendeeInfo({row}) {
   // Product state
-  const [id, setId] = useState(1);
-  const [firstname, setFirstname] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [church, setChurch] = useState('None');
-  const [academicStat, setAcademicStat] = useState('Elementary');
-  const [status, setStatus] = useState('Unpaid');
-  const [registration, setRegistration] = useState('Unpaid');
+  const [id, setId] = useState(row.tracking_no);
+  const [firstname, setFirstname] = useState(row.firstname);
+  const [lastname, setLastname] = useState(row.lastname);
+  const [church, setChurch] = useState(row.church);
+  const [academicStat, setAcademicStat] = useState(row.acadStat);
+  const [status, setStatus] = useState(row.stat);
+  const [registration, setRegistration] = useState(row.registration);
   
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = React.useState('error');
-  const date = new Date();
 
   const handleAddAttendee = async () => {
   setLoading(true); // Indicate loading state
   try {
-    updateId();
     const data = createData(id, church, firstname, lastname, academicStat, status, registration);
-    await uploadRow(data);
+    await updateRow(row.id, data);
     setMessageType('success');
-    setMessage('Registration successful!'); // Set success message
+    setMessage('Edit successful!'); // Set success message
     setShowPopup(true); // Show success message
-    // window.location.reload();
+    // window.location.onClose();
   } catch (error) {
     console.error(error);
     setMessage('Failed to register. Please try again.'); // Set error message
@@ -54,16 +52,6 @@ export default function AddProductForm() {
       hidePopup();
     }, 5000);
   }
-
-  const updateId = async () => {
-  const count = await countRows();
-
-  if (count > 0) {
-    setId(count + 1);
-  } else {
-    setId(id + 1);
-  }
-}
 
   useEffect(() => {
     let payment;
@@ -85,15 +73,6 @@ export default function AddProductForm() {
     }
     setRegistration(payment);
   }, [academicStat]); 
-
-  useEffect(() => {
-    const fetchRowCount = async () => {
-      const count = await countRows();
-      setId(count + 1);
-    };
-
-    fetchRowCount();
-  }, []);
 
   const isRegisterDisabled = () => {
   return (
@@ -189,7 +168,7 @@ export default function AddProductForm() {
               onClick={handleAddAttendee}
               disabled={loading || isRegisterDisabled()} // Add this line
             >
-              {loading ? 'Uploading...' : 'Register'}
+              {loading ? 'Uploading...' : 'Edit'}
             </Button>
           </Grid>
         </Grid>
