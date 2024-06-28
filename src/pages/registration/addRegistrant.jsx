@@ -5,6 +5,8 @@ import { Typography, Button, Card, CardContent, TextField, Grid, Alert } from '@
 import Snackbar from '@mui/material/Snackbar';
 
 import { uploadRow, countRows } from '../backend';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+
 
 function createData(tracking_no,church ,firstname, lastname, acadStat, stat, registration) {
   return { tracking_no,church ,firstname, lastname, acadStat, stat, registration };
@@ -26,6 +28,8 @@ export default function AddProductForm() {
   const [messageType, setMessageType] = React.useState('error');
   const date = new Date();
 
+  const navigate = useNavigate();
+
   const handleAddAttendee = async () => {
   setLoading(true); // Indicate loading state
   try {
@@ -35,6 +39,8 @@ export default function AddProductForm() {
     setMessageType('success');
     setMessage('Registration successful!'); // Set success message
     setShowPopup(true); // Show success message
+    // Use navigate to refresh the page
+    navigate(0, { replace: true }); // This is the key change
     // window.location.reload();
   } catch (error) {
     console.error(error);

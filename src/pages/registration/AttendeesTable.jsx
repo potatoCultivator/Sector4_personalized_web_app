@@ -30,6 +30,8 @@ import Dot from 'components/@extended/Dot';
 import { fetchAllRows, updateRow, deleteRow } from '../backend';
 import EditAttendeeInfo from './editInfo';
 
+import { useNavigate } from 'react-router-dom'; 
+
 // ===========================||  Functions ||=========================== //
 
 async function handleEdit(tracking_no, newData) {
@@ -208,13 +210,13 @@ function RegistrationPayment({paymentStats})
 // ==============================|| ORDER TABLE ||============================== //
 
 export default function AttendeesTable({ attendeesStat }) {
-  const [count, setCount] = useState(0);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('tracking_no');
   const [rows, setRows] = useState([]);
   const [currentRow, setCurrentRow] = useState(null);
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -272,6 +274,7 @@ const handleConfirmDelete = async () => {
   setRows(updatedRows);
   // Close the dialog
   handleCloseDeleteDialog();
+  navigate(0, { replace: true }); 
 };
 
 
