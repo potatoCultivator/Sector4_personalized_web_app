@@ -6,13 +6,12 @@ import Snackbar from '@mui/material/Snackbar';
 
 import { uploadRow,updateRow } from '../backend';
 
-function createData(tracking_no,church ,firstname, lastname, acadStat, stat, registration) {
-  return { tracking_no,church ,firstname, lastname, acadStat, stat, registration };
+function createData(church ,firstname, lastname, acadStat, stat, registration) {
+  return { church ,firstname, lastname, acadStat, stat, registration };
 }
 
 export default function EditAttendeeInfo({row}) {
   // Product state
-  const [id, setId] = useState(row.tracking_no);
   const [firstname, setFirstname] = useState(row.firstname);
   const [lastname, setLastname] = useState(row.lastname);
   const [church, setChurch] = useState(row.church);
@@ -28,7 +27,7 @@ export default function EditAttendeeInfo({row}) {
   const handleAddAttendee = async () => {
   setLoading(true); // Indicate loading state
   try {
-    const data = createData(id, church, firstname, lastname, academicStat, status, registration);
+    const data = createData(church, firstname, lastname, academicStat, status, registration);
     await updateRow(row.id, data);
     setMessageType('success');
     setMessage('Edit successful!'); // Set success message
@@ -76,7 +75,6 @@ export default function EditAttendeeInfo({row}) {
 
   const isRegisterDisabled = () => {
   return (
-    id === null ||
     firstname === '' ||
     lastname === '' ||
     church === '' ||

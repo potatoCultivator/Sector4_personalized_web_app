@@ -8,8 +8,8 @@ import { uploadRow } from '../backend';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 
-function createData(tracking_no,church ,firstname, lastname, acadStat, stat, registration) {
-  return { tracking_no,church ,firstname, lastname, acadStat, stat, registration };
+function createData(church ,firstname, lastname, acadStat, stat, registration) {
+  return { church ,firstname, lastname, acadStat, stat, registration };
 }
 
 export default function AddProductForm() {
@@ -31,7 +31,6 @@ export default function AddProductForm() {
   const handleAddAttendee = async () => {
   setLoading(true); // Indicate loading state
   try {
-    updateId();
     const data = createData(church, firstname, lastname, academicStat, status, registration);
     await uploadRow(data);
     setMessageType('success');

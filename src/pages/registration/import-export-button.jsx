@@ -31,8 +31,8 @@ function exportToCSV(rows) {
   saveAs(blob, 'Attendees.csv');
 }
 
-function createData(tracking_no,church ,name, acadStat, stat, regStat) {
-  return { tracking_no,church ,name, acadStat, stat, regStat };
+function createData(church, firstname, lastname, acadStat, stat, regStat) {
+  return { church , firstname, lastname, acadStat, stat, regStat };
 }
 
 export default function ImportExportButton() {
@@ -55,7 +55,7 @@ export default function ImportExportButton() {
           Papa.parse(file, {
             header: true,
             complete: async function(results) {
-              const newRows = results.data.map((row, index) => createData(index+1, row.church, row.name, row.acadStat, parseInt(row.stat), parseInt(row.regStat)));
+              const newRows = results.data.map((row, index) => createData(row.church, row.firstname, row.lastname, row.acadStat, row.stat, parseInt(row.regStat)));
               await uploadList(newRows);
               setRows(newRows);
               window.location.reload();
