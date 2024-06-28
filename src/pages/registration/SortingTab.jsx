@@ -57,12 +57,6 @@ export default function SortingTab() {
     setValue(newValue);
   };
 
-  // useEffect(() => {
-  //   fetchAllRows().then((data) => {
-  //     console.log(data);
-  //   });
-  // }, []);
-
   useEffect(() => {
     fetchAllRows().then((data) => {
       const counts = data.reduce((acc, curr) => {
@@ -76,7 +70,7 @@ export default function SortingTab() {
         return acc;
       }, { zeros: 0, ones: 0 });
 
-      console.log(counts);
+      /*console.log(counts);*/
     });
   }, []);
 

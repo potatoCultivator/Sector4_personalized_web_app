@@ -4,7 +4,7 @@ import { Typography, Button, Card, CardContent, TextField, Grid, Alert } from '@
 // import Product from './product';
 import Snackbar from '@mui/material/Snackbar';
 
-import { uploadRow, countRows } from '../backend';
+import { uploadRow } from '../backend';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 
@@ -13,8 +13,6 @@ function createData(tracking_no,church ,firstname, lastname, acadStat, stat, reg
 }
 
 export default function AddProductForm() {
-  // Product state
-  const [id, setId] = useState(1);
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [church, setChurch] = useState('None');
@@ -34,7 +32,7 @@ export default function AddProductForm() {
   setLoading(true); // Indicate loading state
   try {
     updateId();
-    const data = createData(id, church, firstname, lastname, academicStat, status, registration);
+    const data = createData(church, firstname, lastname, academicStat, status, registration);
     await uploadRow(data);
     setMessageType('success');
     setMessage('Registration successful!'); // Set success message
@@ -61,15 +59,6 @@ export default function AddProductForm() {
     }, 5000);
   }
 
-  const updateId = async () => {
-  const count = await countRows();
-
-  if (count > 0) {
-    setId(count + 1);
-  } else {
-    setId(id + 1);
-  }
-}
 
   useEffect(() => {
     let payment;
@@ -92,18 +81,8 @@ export default function AddProductForm() {
     setRegistration(payment);
   }, [academicStat]); 
 
-  useEffect(() => {
-    const fetchRowCount = async () => {
-      const count = await countRows();
-      setId(count + 1);
-    };
-
-    fetchRowCount();
-  }, []);
-
   const isRegisterDisabled = () => {
   return (
-    id === null ||
     firstname === '' ||
     lastname === '' ||
     church === '' ||

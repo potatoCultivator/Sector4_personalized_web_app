@@ -13,9 +13,22 @@ import { useEffect, useRef } from 'react';
 import { uploadList, fetchAllRows } from '../backend';
 
 function exportToCSV(rows) {
-   const csv = Papa.unparse(rows);
-   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-   saveAs(blob, 'Attendees.csv');
+  // Map over rows and re-structure each row in the desired order
+  const modifiedRows = rows.map(({ church, firstname, lastname, acadStat, stat, registration }) => ({
+    church,
+    firstname,
+    lastname,
+    acadStat,
+    stat,
+    registration
+  }));
+
+  // Convert modified rows to CSV
+  const csv = Papa.unparse(modifiedRows);
+
+  // Create a blob and save it as a CSV file
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  saveAs(blob, 'Attendees.csv');
 }
 
 function createData(tracking_no,church ,name, acadStat, stat, regStat) {
