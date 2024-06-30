@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import React from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -14,6 +15,10 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { Snackbar, Alert } from '@mui/material';
+
 
 // third party
 import * as Yup from 'yup';
@@ -22,6 +27,7 @@ import { Formik } from 'formik';
 // project import
 import AnimateButton from 'components/@extended/AnimateButton';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import { registerUser } from 'pages/backend';
 
 // assets
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
@@ -32,6 +38,9 @@ import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 export default function AuthRegister() {
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -49,6 +58,21 @@ export default function AuthRegister() {
     changePassword('');
   }, []);
 
+   // Example onSubmit method where you would handle registration
+   const handleSubmit = async (values) => {
+    try {
+      // Your registration logic here
+      // On successful registration:
+      setSnackbarMessage('Account successfully registered!');
+      setSnackbarOpen(true);
+      // Redirect or further actions
+    } catch (error) {
+      // Handle registration error
+      setSnackbarMessage('Registration failed. Please try again.');
+      setSnackbarOpen(true);
+    }
+  };
+
   return (
     <>
       <Formik
@@ -56,7 +80,7 @@ export default function AuthRegister() {
           firstname: '',
           lastname: '',
           email: '',
-          company: '',
+          role: '',
           password: '',
           submit: null
         }}
@@ -66,7 +90,35 @@ export default function AuthRegister() {
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
+        onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
+          try {
+            // Prepare the data to be submitted to Firestore
+            const userData = {
+              firstname: values.firstname,
+              lastname: values.lastname,
+              email: values.email,
+              role: values.role,
+              password: values.password
+              // Do not store the password in Firestore
+            };
+            // Call the registerUser function with the prepared data
+            await registerUser(userData);
+            setSnackbarMessage('Account successfully registered!');
+            setSnackbarOpen(true);
+            // Handle post-registration logic here (e.g., redirecting the user)
+        
+            // Clear all the values by calling resetForm with no arguments for initial values reset
+            resetForm();
+          } catch (error) {
+            // Handle errors, such as setting form submission errors
+            setErrors({ submit: error.message });
+          } finally {
+            setSubmitting(false);
+          }
+        }}
       >
+
+        
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
@@ -80,7 +132,7 @@ export default function AuthRegister() {
                     name="firstname"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="John"
+                    placeholder="Juan"
                     fullWidth
                     error={Boolean(touched.firstname && errors.firstname)}
                   />
@@ -103,7 +155,7 @@ export default function AuthRegister() {
                     name="lastname"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Doe"
+                    placeholder="Dela Cruz"
                     inputProps={{}}
                   />
                 </Stack>
@@ -115,22 +167,31 @@ export default function AuthRegister() {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="company-signup">Company</InputLabel>
-                  <OutlinedInput
+                  <InputLabel htmlFor="role-signup">Role/Office</InputLabel>
+                  <Select
                     fullWidth
-                    error={Boolean(touched.company && errors.company)}
-                    id="company-signup"
-                    value={values.company}
-                    name="company"
+                    error={Boolean(touched.role && errors.role)}
+                    id="role-signup"
+                    value={values.role}
+                    name="role"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Demo Inc."
-                    inputProps={{}}
-                  />
+                    displayEmpty
+                    input={<OutlinedInput notched label="Role/Office" />}
+                  >
+                    <MenuItem value="" disabled sx={{ backgroundColor: 'transparent' }}>
+                      Select Role
+                    </MenuItem>
+                    <MenuItem value="president">President</MenuItem>
+                    <MenuItem value="vice president">Vice President</MenuItem>
+                    <MenuItem value="secretary">Secretary</MenuItem>
+                    <MenuItem value="treasurer">Treasurer</MenuItem>
+                    <MenuItem value="pio">PIO</MenuItem>
+                  </Select>
                 </Stack>
-                {touched.company && errors.company && (
-                  <FormHelperText error id="helper-text-company-signup">
-                    {errors.company}
+                {touched.role && errors.role && (
+                  <FormHelperText error id="helper-text-role-signup">
+                    {errors.role}
                   </FormHelperText>
                 )}
               </Grid>
@@ -146,7 +207,7 @@ export default function AuthRegister() {
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="demo@company.com"
+                    placeholder="bogart@gmail.com"
                     inputProps={{}}
                   />
                 </Stack>
@@ -234,6 +295,12 @@ export default function AuthRegister() {
           </form>
         )}
       </Formik>
+
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

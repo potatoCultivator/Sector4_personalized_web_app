@@ -15,15 +15,15 @@ const pages = {
   type: 'group',
   children: [
     {
-      id: 'login1',
+      id: '',
       title: 'Login',
       type: 'item',
-      url: '/login',
+      url: '/',
       icon: icons.LoginOutlined,
       target: true
     },
     {
-      id: 'register1',
+      id: 'register',
       title: 'Register',
       type: 'item',
       url: '/register',

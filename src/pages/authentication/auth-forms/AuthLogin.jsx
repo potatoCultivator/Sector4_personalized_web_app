@@ -17,12 +17,15 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import { useNavigate } from 'react-router-dom'; 
+
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 
 // project import
 import AnimateButton from 'components/@extended/AnimateButton';
+import { fertchAllAccounts } from 'pages/backend';
 
 // assets
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
@@ -33,8 +36,9 @@ import FirebaseSocial from './FirebaseSocial';
 
 export default function AuthLogin({ isDemo = false }) {
   const [checked, setChecked] = React.useState(false);
-
   const [showPassword, setShowPassword] = React.useState(false);
+  const navigate = useNavigate();
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -55,6 +59,28 @@ export default function AuthLogin({ isDemo = false }) {
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
+        onSubmit={(values, { setSubmitting, setErrors }) => {
+          // Call fetchAllAccounts to get all accounts
+          fertchAllAccounts().then(accounts => {
+            // Step 2: Compare the entered email and password with the fetched accounts
+            const accountExists = accounts.some(account => account.email === values.email && account.password === values.password);
+      
+            if (accountExists) {
+              // Proceed with login
+              console.log("Login successful");
+              navigate('/dashboard');
+            } else {
+              // Step 3: If no account matches, set an error
+              setErrors({ submit: 'Invalid email or password' });
+            }
+      
+            setSubmitting(false);
+          }).catch(error => {
+            // Handle errors, e.g., network issues or problems with the fetchAllAccounts function
+            setErrors({ submit: 'An error occurred. Please try again later.' });
+            setSubmitting(false);
+          });
+        }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>

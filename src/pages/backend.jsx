@@ -52,5 +52,31 @@ async function countRows() {
   return querySnapshot.docs.length; // Returns the count of documents in the collection
 }
 
-export { uploadList, fetchAllRows, updateRow, deleteRow, uploadRow, countRows };
+async function registerUser(data) {
+  const db = firestore;
+  await addDoc(collection(db, "usersList"), data);
+}
+
+async function fertchAllAccounts() {
+  const db = firestore;
+  const querySnapshot = await getDocs(collection(db, "usersList"));
+
+  const users = querySnapshot.docs.map(doc => ({
+    id: doc.id, // Include the document ID
+    ...doc.data() // Spread the document data
+  }));
+
+  return users;
+}
+
+export { 
+  uploadList, 
+  fetchAllRows, 
+  updateRow, 
+  deleteRow, 
+  uploadRow, 
+  countRows,
+  registerUser,
+  fertchAllAccounts
+};
   
