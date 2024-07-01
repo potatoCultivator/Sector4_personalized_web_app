@@ -1,4 +1,5 @@
 import { RouterProvider } from 'react-router-dom';
+import { DataProvider } from './DataContext'; // Adjust the import path to where your DataContext is defined
 
 // project import
 import router from 'routes';
@@ -10,10 +11,12 @@ import ScrollTop from 'components/ScrollTop';
 
 export default function App() {
   return (
-    <ThemeCustomization>
-      <ScrollTop>
-        <RouterProvider router={router} />
-      </ScrollTop>
-    </ThemeCustomization>
+    <DataProvider> {/* Wrap the application with the DataProvider */}
+      <ThemeCustomization>
+        <ScrollTop>
+          <RouterProvider router={router} />
+        </ScrollTop>
+      </ThemeCustomization>
+    </DataProvider>
   );
 }

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import { useLocation } from 'react-router';
+import { useData } from '../../../../../DataContext';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -50,8 +51,7 @@ function a11yProps(index) {
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 export default function Profile() {
-  const location = useLocation();
-  const account = location.state?.account;
+  const { data: account } = useData();
   const theme = useTheme();
 
   const anchorRef = useRef(null);

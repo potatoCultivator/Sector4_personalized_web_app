@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useData } from '../../../DataContext';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -34,7 +35,8 @@ import FirebaseSocial from './FirebaseSocial';
 
 // ============================|| JWT - LOGIN ||============================ //
 
-export default function AuthLogin({ isDemo = false }) {
+export default function AuthLogin() {
+  const { setData } = useData();
   const [checked, setChecked] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const navigate = useNavigate();
@@ -68,7 +70,8 @@ export default function AuthLogin({ isDemo = false }) {
             if (account) {
               // Proceed with login
               console.log("Login successful");
-              navigate('/dashboard', { state: { account } });
+              setData(account);
+              navigate('/dashboard');
             } else {
               // Step 3: If no account matches, set an error
               setErrors({ submit: 'Invalid email or password' });
