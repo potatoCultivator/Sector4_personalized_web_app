@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
+import { useLocation } from 'react-router';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -49,6 +50,8 @@ function a11yProps(index) {
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 export default function Profile() {
+  const location = useLocation();
+  const account = location.state?.account;
   const theme = useTheme();
 
   const anchorRef = useRef(null);
@@ -91,7 +94,7 @@ export default function Profile() {
         <Stack direction="row" spacing={1.25} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" src={avatar1} size="sm" />
           <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-            Jhyzl Joy Suguipit
+            {account?.firstname + ' ' + account.lastname}
           </Typography>
         </Stack>
       </ButtonBase>
@@ -124,9 +127,9 @@ export default function Profile() {
                         <Stack direction="row" spacing={1.25} alignItems="center">
                           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                           <Stack>
-                            <Typography variant="h6">Jhyzl Joy Suguipit</Typography>
+                            <Typography variant="h6">{account.firstname + " " + account.lastname}</Typography>
                             <Typography variant="body2" color="text.secondary">
-                              Treasurer
+                              {account.role}
                             </Typography>
                           </Stack>
                         </Stack>

@@ -63,17 +63,17 @@ export default function AuthLogin({ isDemo = false }) {
           // Call fetchAllAccounts to get all accounts
           fertchAllAccounts().then(accounts => {
             // Step 2: Compare the entered email and password with the fetched accounts
-            const accountExists = accounts.some(account => account.email === values.email && account.password === values.password);
-      
-            if (accountExists) {
+            const account = accounts.find(account => account.email === values.email && account.password === values.password);
+          
+            if (account) {
               // Proceed with login
               console.log("Login successful");
-              navigate('/dashboard');
+              navigate('/dashboard', { state: { account } });
             } else {
               // Step 3: If no account matches, set an error
               setErrors({ submit: 'Invalid email or password' });
             }
-      
+          
             setSubmitting(false);
           }).catch(error => {
             // Handle errors, e.g., network issues or problems with the fetchAllAccounts function

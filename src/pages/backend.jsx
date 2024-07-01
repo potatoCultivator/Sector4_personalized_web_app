@@ -69,6 +69,18 @@ async function fertchAllAccounts() {
   return users;
 }
 
+async function saveAccountLoggingIn(data, docName) {
+  const db = firestore;
+  await addDoc(collection(db, docName), data);
+}
+
+
+
+async function deleteAccountLoggingIn(data, docName) {
+  const db = firestore;
+  await deleteDoc(doc(db, docName, data.id));
+}
+
 export { 
   uploadList, 
   fetchAllRows, 
