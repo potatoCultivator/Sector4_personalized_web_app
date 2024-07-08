@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
-import { useLocation } from 'react-router';
 import { useData } from '../../../../../DataContext';
 
 // material-ui
@@ -94,7 +93,7 @@ export default function Profile() {
         <Stack direction="row" spacing={1.25} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" src={avatar1} size="sm" />
           <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-            {account?.firstname + ' ' + account.lastname}
+            {account?.firstname + ' ' + account?.lastname}
           </Typography>
         </Stack>
       </ButtonBase>
@@ -137,7 +136,7 @@ export default function Profile() {
                       <Grid item>
                         <Tooltip title="Logout">
                           <IconButton size="large" sx={{ color: 'text.primary' }}>
-                            <LogoutOutlined />
+                            {/* <LogoutOutlined /> */}
                           </IconButton>
                         </Tooltip>
                       </Grid>

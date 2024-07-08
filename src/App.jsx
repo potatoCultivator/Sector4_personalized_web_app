@@ -11,7 +11,7 @@ import ScrollTop from 'components/ScrollTop';
 
 export default function App() {
   return (
-    <DataProvider> {/* Wrap the application with the DataProvider */}
+    <DataProvider> 
       <ThemeCustomization>
         <ScrollTop>
           <RouterProvider router={router} />

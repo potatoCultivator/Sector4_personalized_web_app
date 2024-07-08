@@ -28,6 +28,7 @@ export default function ProfileTab() {
 
   const handleLogoutAcc = () => {
     navigate('/', { replace: true });
+    Cookies.remove('data');
   };
 
   return (

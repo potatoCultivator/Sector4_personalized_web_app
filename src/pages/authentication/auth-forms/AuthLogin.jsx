@@ -71,7 +71,7 @@ export default function AuthLogin() {
               // Proceed with login
               console.log("Login successful");
               setData(account);
-              navigate('/dashboard');
+              navigate('/dashboard', { replace: true });
             } else {
               // Step 3: If no account matches, set an error
               setErrors({ submit: 'Invalid email or password' });
