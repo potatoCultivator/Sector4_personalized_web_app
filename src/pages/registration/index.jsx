@@ -5,24 +5,28 @@ import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 
 // project import
-import MainCard from 'components/MainCard';
 import AddRegistrant from './addRegistrant'
 import SortingTab from './SortingTab';
 import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
 import ImportExportButton from './import-export-button';
+import MembersList from './MembersList';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 export default function Registration() {
-  const [value, setValue] = useState(0);
   const [optVal, setOptVal] = useState('cbc');
+  const [open, setOpen] = useState(false);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const handleClickOpen = () => {
+    setOpen(true);
+  }
 
+  const handleClose = () => {
+    setOpen(false);
+  }
   const churchName = [
     {
       optVal: 'all',
@@ -68,16 +72,27 @@ export default function Registration() {
 
       <Grid item md={8} sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} />
 
+      {/* row 2 */}
       <Grid item xs={12}>
-        <MainCard title="Registration">
-            <Typography variant="body2">
-                And ibutang ngari kay ang total na kwarta sa tanan ga register og ang total na kwarta na church na nag register haha
-            </Typography>
-        
-        </MainCard>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h5">Current Attendees</Typography>
+          </Grid>
+          <Grid item />
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleClickOpen}>
+              Add Registrant
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item >
+           <ImportExportButton />
+        </Grid>
+        <MembersList />
       </Grid>
+
       {/* row 3 */}
-      <Grid item xs={12} md={7} lg={8}>
+      <Grid item xs={12}>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
             <Typography variant="h5">Current Attendees</Typography>
@@ -105,7 +120,7 @@ export default function Registration() {
         </Grid>
         <SortingTab />
       </Grid>
-      <Grid item xs={12} md={5} lg={4}>
+      {/* <Grid item xs={12} md={5} lg={4}>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
             <Typography variant="h5">Registration Card</Typography>
@@ -115,7 +130,10 @@ export default function Registration() {
         <MainCard sx={{ mt: 2 }} content={false}>
           <AddRegistrant />
         </MainCard>
-      </Grid>
+      </Grid> */}
+      <Dialog open={open} onClose={handleClose}>
+        <AddRegistrant />
+      </Dialog>
     </Grid>
   );
 }

@@ -37,7 +37,7 @@ export default function AddProductForm() {
     setMessage('Registration successful!'); // Set success message
     setShowPopup(true); // Show success message
     // Use navigate to refresh the page
-    navigate(0, { replace: true }); // This is the key change
+    // navigate(0, { replace: true }); // This is the key change
     // window.location.reload();
   } catch (error) {
     console.error(error);

@@ -82,7 +82,7 @@ export default function ImportExportButton() {
                 Export
             </Button>
 
-            <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
+            {/* <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
             <Button 
             disableRipple 
             onClick={() => fileInputRef.current.click()} 
@@ -90,7 +90,7 @@ export default function ImportExportButton() {
             color="secondary" 
             startIcon={<FileUploadOutlinedIcon />}>
                 Import
-            </Button>
+            </Button> */}
         </>
     )
 }
