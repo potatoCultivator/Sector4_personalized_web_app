@@ -1,11 +1,7 @@
 // material-ui
-import { Grid } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import { useMediaQuery, Grid, Typography, TextField, MenuItem, Dialog } from '@mui/material';
 
 // project import
 import AddRegistrant from './addRegistrant'
@@ -14,13 +10,14 @@ import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
 import ImportExportButton from './import-export-button';
 import MembersList from './MembersList';
 import MainCard from 'components/MainCard';
-import { Add } from '@mui/icons-material';
+
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 export default function Registration() {
   const [optVal, setOptVal] = useState('cbc');
   const [open, setOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -96,82 +93,54 @@ export default function Registration() {
               <MembersList />
             </MainCard>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <SortingTab />
-          </Grid>
+          {!isMobile && (
+            <>
+            <Grid item xs={12} sm={6}>
+              <SortingTab />
+            </Grid>
+            </>
+          )}
+          
         </Grid>
       </Grid>
       
-      {/* <Grid item xs={12}>
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item>
-            <Typography variant="h5">Previous Attendees</Typography>
-          </Grid>
-          <Grid item />
-          <Grid item>
-            <Button variant="contained" color="primary" onClick={handleClickOpen}>
-              Add Registrant
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid item >
-           <ImportExportButton />
-        </Grid>
-        <Grid container direction="row" justifyContent="space-between" alignItems="center">
-          <Grid item xs={12} sm={6}>
-            <SortingTab />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <SortingTab />
-          </Grid>
-        </Grid>
-      </Grid> */}
-      
-
-
       {/* row 3 */}
-      <Grid item xs={12}>
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item>
-            <Typography variant="h5">Current Attendees</Typography>
-          </Grid>
-          <Grid item />
-          <Grid item>
-            <TextField
-            id="standard-select-churchName"
-            size="small"
-            select
-            value={optVal}
-            onChange={(e) => setOptVal(e.target.value)}
-            sx={{ '& .MuiInputBase-input': { py: 0.75, fontSize: '0.875rem' } }}
-          >
-            {churchName.map((option) => (
-              <MenuItem key={option.optVal} value={option.optVal}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          </Grid>
-        </Grid>
-        <Grid item >
-           <ImportExportButton />
-        </Grid>
-        <SortingTab />
+      {isMobile && (
+          <>
+            <Grid item xs={12}>
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography variant="h5">Current Attendees</Typography>
+                </Grid>
+                <Grid item />
+                <Grid item>
+                  <TextField
+                  id="standard-select-churchName"
+                  size="small"
+                  select
+                  value={optVal}
+                  onChange={(e) => setOptVal(e.target.value)}
+                  sx={{ '& .MuiInputBase-input': { py: 0.75, fontSize: '0.875rem' } }}
+                >
+                  {churchName.map((option) => (
+                    <MenuItem key={option.optVal} value={option.optVal}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                </Grid>
+              </Grid>
+              <Grid item >
+                <ImportExportButton />
+              </Grid>
+              <SortingTab />
+            </Grid>
+            <Dialog open={open} onClose={handleClose}>
+              <AddRegistrant />
+            </Dialog>
+          </>
+        )}
       </Grid>
-      {/* <Grid item xs={12} md={5} lg={4}>
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item>
-            <Typography variant="h5">Registration Card</Typography>
-          </Grid>
-          <Grid item />
-        </Grid>
-        <MainCard sx={{ mt: 2 }} content={false}>
-          <AddRegistrant />
-        </MainCard>
-      </Grid> */}
-      <Dialog open={open} onClose={handleClose}>
-        <AddRegistrant />
-      </Dialog>
-    </Grid>
+    
   );
 }
