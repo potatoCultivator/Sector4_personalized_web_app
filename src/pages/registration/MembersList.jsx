@@ -28,10 +28,11 @@ import { NumericFormat } from 'react-number-format';
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { fetchAllRows, updateRow, deleteRow } from '../backend';
+import { fetchAllRows, updateRow, deleteRow, uploadRow } from '../backend';
 import EditAttendeeInfo from './editInfo';
 
 import { useNavigate } from 'react-router-dom'; 
+import { set } from 'lodash';
 
 // ===========================||  Functions ||=========================== //
 
@@ -41,7 +42,7 @@ async function handleEdit(tracking_no, newData) {
   setRows(newRows);
 
   // Update the row in the backend
-  await updateRow(tracking_no, newData);
+  await updateRow(tracking_no, newData, "MembersList");
 }
 
 function exportToCSV(rows) {
@@ -81,7 +82,7 @@ const headCells = [
     id: 'tracking_no',
     align: 'center',
     disablePadding: false,
-    label: 'Number'
+    label: 'No.'
   },
   {
     id: 'church',
@@ -99,7 +100,7 @@ const headCells = [
     id: 'acadStat',
     align: 'right',
     disablePadding: false,
-    label: 'Academic Status'
+    label: 'Acad Status'
   },
   {
     id: 'action',
@@ -151,6 +152,7 @@ export default function AttendeesTable({ attendeesStat }) {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [rowToRegister, setRowToRegister] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -167,8 +169,9 @@ export default function AttendeesTable({ attendeesStat }) {
     const [openRegisterDialog, setOpenRegisterDialog] = React.useState(false);
 
     // Function to handle opening the register dialog
-    const handleOpenRegisterDialog = () => {
-    setOpenRegisterDialog(true);
+    const handleOpenRegisterDialog = (row) => {
+      setRowToRegister(row);
+      setOpenRegisterDialog(true);
     };
 
     // Function to handle closing the register dialog
@@ -178,7 +181,7 @@ export default function AttendeesTable({ attendeesStat }) {
 
     // Function to handle the confirmation of registration
     const handleConfirmRegistration = () => {
-    // Implement registration logic here
+    uploadRow(rowToRegister, "attendeesList");
     console.log("Registration confirmed");
     handleCloseRegisterDialog();
     };
@@ -187,7 +190,7 @@ export default function AttendeesTable({ attendeesStat }) {
   useEffect(() => {
     // Fetch data from Firebase
     const fetchData = async () => {
-      const data = await fetchAllRows();
+      const data = await fetchAllRows("MembersList");
       setRows(data);
     };
     fetchData();
@@ -210,7 +213,7 @@ export default function AttendeesTable({ attendeesStat }) {
   const handleClose = async () => {
   setOpen(false);
   // Refetch data from Firebase
-  const data = await fetchAllRows();
+  const data = await fetchAllRows("MembersList");
   setRows(data);
 };
 
@@ -233,13 +236,15 @@ const handleCloseDeleteDialog = () => {
 
 // Function to confirm deletion
 const handleConfirmDelete = async () => {
-  await deleteRow(rowToDelete.id);
-  // Refetch data from Firebase or remove the row from the local state
+  // Ensure you're using the unique identifier to delete the row
+  await deleteRow(rowToDelete.id, "MembersList");
+  
+  // Filter out the deleted row using the unique identifier
   const updatedRows = rows.filter(row => row.id !== rowToDelete.id);
   setRows(updatedRows);
+  
   // Close the dialog
   handleCloseDeleteDialog();
-  navigate(0, { replace: true }); 
 };
 
 
@@ -290,28 +295,29 @@ const handleConfirmDelete = async () => {
                         </IconButton>
                     </Tooltip>
                     <Menu
-                        id="long-menu"
-                        MenuListProps={{
+                      id="long-menu"
+                      MenuListProps={{
                         'aria-labelledby': 'long-button',
-                        }}
-                        anchorEl={anchorEl}
-                        open={menuOpen}
-                        onClose={handleClose1}
-                        PaperProps={{
+                      }}
+                      anchorEl={anchorEl}
+                      open={menuOpen}
+                      onClose={handleClose1}
+                      PaperProps={{
                         style: {
-                            maxHeight: 48 * 4.5,
-                            width: '20ch',
+                          maxHeight: 48 * 4.5,
+                          width: '12ch',
                         },
-                        }}
+                        elevation: 1, // This removes the shadow
+                      }}
                     >
                         <MenuItem onClick={() => { handleOpen(row); handleClose1(); }}>
-                        <EditOutlined fontSize="small" /> Edit
+                            <EditOutlined fontSize="small" /> Edit
                         </MenuItem>
                         <MenuItem onClick={() => { handleDeleteClick(row); handleClose1(); }}>
-                        <DeleteOutlineIcon fontSize="small" style={{ color: theme.palette.error.main }} /> Delete
+                            <DeleteOutlineIcon fontSize="small" style={{ color: theme.palette.error.main }} /> Delete
                         </MenuItem>
-                        <MenuItem onClick={() => { handleOpenRegisterDialog(); handleClose1(); }}>
-                        <RegisterIcon fontSize="small" /> Register
+                        <MenuItem onClick={() => { handleOpenRegisterDialog(row); handleClose1(); }}>
+                            <RegisterIcon fontSize="small" /> Register
                         </MenuItem>
                     </Menu>
                     </TableCell>
@@ -324,7 +330,7 @@ const handleConfirmDelete = async () => {
 
     {/* Dialog goes here */}
     <Dialog open={open} onClose={handleClose}>
-      <EditAttendeeInfo row={currentRow} />
+      <EditAttendeeInfo row={currentRow} docName={"MembersList"} />
     </Dialog>
 
     <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>

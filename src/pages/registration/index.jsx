@@ -13,6 +13,8 @@ import SortingTab from './SortingTab';
 import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
 import ImportExportButton from './import-export-button';
 import MembersList from './MembersList';
+import MainCard from 'components/MainCard';
+import { Add } from '@mui/icons-material';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -76,7 +78,7 @@ export default function Registration() {
       <Grid item xs={12}>
         <Grid container alignItems="center" justifyContent="space-between">
           <Grid item>
-            <Typography variant="h5">Current Attendees</Typography>
+            <Typography variant="h5">Previous Attendees</Typography>
           </Grid>
           <Grid item />
           <Grid item>
@@ -88,8 +90,44 @@ export default function Registration() {
         <Grid item >
            <ImportExportButton />
         </Grid>
-        <MembersList />
+        <Grid container direction="row" justifyContent="space-between" spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <MainCard>
+              <MembersList />
+            </MainCard>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <SortingTab />
+          </Grid>
+        </Grid>
       </Grid>
+      
+      {/* <Grid item xs={12}>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h5">Previous Attendees</Typography>
+          </Grid>
+          <Grid item />
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleClickOpen}>
+              Add Registrant
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item >
+           <ImportExportButton />
+        </Grid>
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
+          <Grid item xs={12} sm={6}>
+            <SortingTab />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <SortingTab />
+          </Grid>
+        </Grid>
+      </Grid> */}
+      
+
 
       {/* row 3 */}
       <Grid item xs={12}>

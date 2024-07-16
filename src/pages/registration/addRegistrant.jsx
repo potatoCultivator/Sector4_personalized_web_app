@@ -32,7 +32,7 @@ export default function AddProductForm() {
   setLoading(true); // Indicate loading state
   try {
     const data = createData(church, firstname, lastname, academicStat, status, registration);
-    await uploadRow(data);
+    await uploadRow(data,"MembersList"); // Upload data to Firestore
     setMessageType('success');
     setMessage('Registration successful!'); // Set success message
     setShowPopup(true); // Show success message

@@ -40,7 +40,7 @@ async function handleEdit(tracking_no, newData) {
   setRows(newRows);
 
   // Update the row in the backend
-  await updateRow(tracking_no, newData);
+  await updateRow(tracking_no, newData, "attendeesList");
 }
 
 function exportToCSV(rows) {
@@ -80,7 +80,7 @@ const headCells = [
     id: 'tracking_no',
     align: 'center',
     disablePadding: false,
-    label: 'Number'
+    label: 'No.'
   },
   {
     id: 'church',
@@ -98,7 +98,7 @@ const headCells = [
     id: 'acadStat',
     align: 'right',
     disablePadding: false,
-    label: 'Academic Status'
+    label: 'Acad Status'
   },
   {
     id: 'stat',
@@ -110,7 +110,7 @@ const headCells = [
     id: 'regStat',
     align: 'right',
     disablePadding: false,
-    label: 'Registration'
+    label: 'Fee'
   }
   ,
   {
@@ -222,7 +222,7 @@ export default function AttendeesTable({ attendeesStat }) {
   useEffect(() => {
     // Fetch data from Firebase
     const fetchData = async () => {
-      const data = await fetchAllRows();
+      const data = await fetchAllRows("attendeesList");
       setRows(data);
     };
     fetchData();
@@ -245,7 +245,7 @@ export default function AttendeesTable({ attendeesStat }) {
   const handleClose = async () => {
   setOpen(false);
   // Refetch data from Firebase
-  const data = await fetchAllRows();
+  const data = await fetchAllRows("attendeesList");
   setRows(data);
 };
 
@@ -268,13 +268,13 @@ const handleCloseDeleteDialog = () => {
 
 // Function to confirm deletion
 const handleConfirmDelete = async () => {
-  await deleteRow(rowToDelete.id);
+  await deleteRow(rowToDelete.id, "attendeesList");
   // Refetch data from Firebase or remove the row from the local state
   const updatedRows = rows.filter(row => row.id !== rowToDelete.id);
   setRows(updatedRows);
   // Close the dialog
   handleCloseDeleteDialog();
-  navigate(0, { replace: true }); 
+  // navigate(0, { replace: true }); 
 };
 
 
@@ -339,7 +339,7 @@ const handleConfirmDelete = async () => {
 
     {/* Dialog goes here */}
     <Dialog open={open} onClose={handleClose}>
-      <EditAttendeeInfo row={currentRow} />
+      <EditAttendeeInfo row={currentRow} docName={"attendeesList"}/>
     </Dialog>
 
     <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>

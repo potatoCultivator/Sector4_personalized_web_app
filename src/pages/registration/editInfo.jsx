@@ -10,7 +10,7 @@ function createData(church ,firstname, lastname, acadStat, stat, registration) {
   return { church ,firstname, lastname, acadStat, stat, registration };
 }
 
-export default function EditAttendeeInfo({row}) {
+export default function EditAttendeeInfo({row, docName}) {
   // Product state
   const [firstname, setFirstname] = useState(row.firstname);
   const [lastname, setLastname] = useState(row.lastname);
@@ -28,7 +28,7 @@ export default function EditAttendeeInfo({row}) {
   setLoading(true); // Indicate loading state
   try {
     const data = createData(church, firstname, lastname, academicStat, status, registration);
-    await updateRow(row.id, data);
+    await updateRow(row.id, data, docName); // Upload data to Firestore
     setMessageType('success');
     setMessage('Edit successful!'); // Set success message
     setShowPopup(true); // Show success message

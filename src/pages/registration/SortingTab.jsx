@@ -58,7 +58,7 @@ export default function SortingTab() {
   };
 
   useEffect(() => {
-    fetchAllRows().then((data) => {
+    fetchAllRows("attendeesList").then((data) => {
       const counts = data.reduce((acc, curr) => {
         if (curr.stat === "Paid") {
           acc.zeros += 1;

@@ -2,22 +2,22 @@
 import { firestore } from '../firebase';
 import { collection, addDoc, writeBatch, doc, getDocs, updateDoc, deleteDoc } from "firebase/firestore"; 
 
-async function uploadList(data) {
+async function uploadList(data, docName) {
   const db = firestore;
   const batch = writeBatch(db);
 
   data.forEach((item) => {
-    const docRef = doc(collection(db, "attendeesList"));
+    const docRef = doc(collection(db, docName));
     batch.set(docRef, item);
   });
 
   await batch.commit();
 }
 
-async function fetchAllRows() {
+async function fetchAllRows(docName) {
   const db = firestore;
-  const querySnapshot = await getDocs(collection(db, "attendeesList"));
-
+  const querySnapshot = await getDocs(collection(db, docName));
+  
   const rows = querySnapshot.docs.map(doc => ({
     id: doc.id, // Include the document ID
     ...doc.data() // Spread the document data
@@ -28,22 +28,26 @@ async function fetchAllRows() {
   return rows;
 }
 
-async function updateRow(tracking_no, newData) {
+async function updateRow(tracking_no, newData, docName) {
   const db = firestore;
-  const docRef = doc(db, "attendeesList", tracking_no);
+  const docRef = doc(db, docName, tracking_no);
 
   await updateDoc(docRef, newData);
 }
 
-async function deleteRow(tracking_no) {
+async function deleteRow(tracking_no, docName) {
   const db = firestore;
-  const docRef = doc(db, "attendeesList", tracking_no);
+  const docRef = doc(db, docName, tracking_no);
   await deleteDoc(docRef);
 }
 
-async function uploadRow(data) {
+async function uploadRow(data, docName) {
   const db = firestore;
-  await addDoc(collection(db, "attendeesList"), data);
+  // Check if docName is 'membersList', exclude 'id' from data if true
+  const { id, ...dataWithoutId } = data;
+  const payload = docName === 'attendeesList' ? dataWithoutId : data;
+  
+  await addDoc(collection(db, docName), payload);
 }
 
 async function countRows() {
